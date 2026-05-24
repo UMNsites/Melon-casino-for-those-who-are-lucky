@@ -231,6 +231,70 @@ header{position:relative;z-index:10;padding:13px 18px 11px;background:var(--surf
 #toast.push{border-color:var(--gold);color:var(--gold);}
 @keyframes crownBump{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
 .crown-bump{animation:crownBump 0.35s ease;}
+/* ══ KENO ══ */
+.keno-area{max-width:480px;margin:0 auto;}
+.keno-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;}
+.keno-cell{aspect-ratio:1;border-radius:8px;border:2px solid var(--border2);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:13px;cursor:pointer;transition:all 0.15s;color:var(--muted2);}
+.keno-cell:hover{border-color:var(--green);color:var(--green);background:rgba(77,219,106,0.08);}
+.keno-cell.picked{border-color:var(--gold);background:rgba(255,212,77,0.15);color:var(--gold);}
+.keno-cell.hit{border-color:var(--green);background:rgba(77,219,106,0.25);color:var(--green);animation:gemReveal 0.3s ease;}
+.keno-cell.miss{border-color:rgba(247,69,58,0.3);background:rgba(247,69,58,0.08);color:rgba(247,69,58,0.5);}
+.keno-cell.drawn{border-color:var(--muted2);background:rgba(122,171,126,0.1);color:var(--muted2);}
+
+/* ══ VIDEO POKER ══ */
+.poker-area{max-width:500px;margin:0 auto;}
+.poker-hand{display:flex;gap:8px;justify-content:center;margin-bottom:4px;}
+.poker-card{width:62px;height:88px;border-radius:8px;border:3px solid var(--border2);background:var(--surface2);display:flex;flex-direction:column;justify-content:space-between;padding:5px;font-family:'Fredoka One',cursive;cursor:pointer;transition:all 0.2s;position:relative;box-shadow:0 4px 12px rgba(0,0,0,0.4);animation:cardDeal 0.25s cubic-bezier(0.16,1,0.3,1);}
+.poker-card.red{background:#fff5f5;color:var(--melon);}
+.poker-card.black{background:#f0fff4;color:#1a3a1a;}
+.poker-card.held{border-color:var(--gold);transform:translateY(-8px);box-shadow:0 8px 20px rgba(255,212,77,0.4);}
+.poker-card .pv{font-size:13px;line-height:1;}
+.poker-card .ps{font-size:16px;text-align:right;line-height:1;}
+.poker-paytable{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:14px;}
+.pp-row{display:flex;justify-content:space-between;background:var(--surface2);border-radius:6px;padding:4px 8px;font-size:11px;color:var(--muted2);}
+.pp-m{font-family:'Fredoka One',cursive;color:var(--gold);}
+
+/* ══ BACCARAT ══ */
+.bac-area{max-width:520px;margin:0 auto;}
+.bac-picks{display:flex;gap:8px;margin-bottom:14px;}
+.bac-pick-btn{flex:1;padding:10px 6px;border-radius:10px;border:2px solid var(--border2);background:var(--surface2);color:var(--white);font-family:'Fredoka One',cursive;font-size:13px;cursor:pointer;transition:all 0.15s;text-align:center;}
+.bac-pick-btn:hover{border-color:var(--green);background:rgba(77,219,106,0.08);}
+.bac-pick-btn.selected{border-color:var(--gold);background:rgba(255,212,77,0.12);color:var(--gold);}
+.bac-odds{display:block;font-size:10px;color:var(--muted2);font-family:'Nunito',sans-serif;font-weight:700;margin-top:2px;}
+.bac-table{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:2px solid var(--border2);border-radius:14px;padding:16px;}
+.bac-zone{flex:1;text-align:center;}
+.bac-zone-label{font-size:9px;font-weight:800;letter-spacing:2px;color:var(--muted2);margin-bottom:8px;}
+.bac-vs{font-family:'Fredoka One',cursive;font-size:20px;color:var(--muted2);align-self:center;padding:0 4px;}
+
+/* ══ WHEEL OF FORTUNE ══ */
+.wheel-fortune-area{max-width:340px;margin:0 auto;text-align:center;position:relative;}
+.wheel-pointer{position:absolute;top:-4px;left:50%;transform:translateX(-50%);font-size:22px;color:var(--gold);text-shadow:0 0 10px rgba(255,212,77,0.6);z-index:2;line-height:1;}
+
+/* ══ DRAGON TOWER ══ */
+.dragon-area{max-width:400px;margin:0 auto;}
+.dragon-diff-btn{padding:5px 10px;border-radius:7px;border:2px solid var(--border2);background:var(--surface2);color:var(--muted2);font-family:'Fredoka One',cursive;font-size:11px;cursor:pointer;transition:all 0.15s;}
+.dragon-diff-btn.active{border-color:var(--green);color:var(--green);background:rgba(77,219,106,0.1);}
+.dragon-tower{display:flex;flex-direction:column;gap:6px;}
+.dragon-row{display:flex;gap:6px;justify-content:center;}
+.dragon-egg{width:70px;height:50px;border-radius:10px;border:2px solid var(--border2);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;transition:all 0.15s;}
+.dragon-egg:hover:not(.disabled):not(.revealed){border-color:var(--green);background:rgba(77,219,106,0.1);transform:scale(1.05);}
+.dragon-egg.disabled{cursor:not-allowed;opacity:0.5;}
+.dragon-egg.revealed-safe{border-color:var(--green);background:rgba(77,219,106,0.15);animation:gemReveal 0.3s ease;}
+.dragon-egg.revealed-bad{border-color:var(--melon);background:rgba(247,69,58,0.15);animation:mineReveal 0.3s ease;}
+.dragon-egg.show-bad{border-color:rgba(247,69,58,0.3);background:rgba(247,69,58,0.06);}
+.dragon-row-label{display:flex;align-items:center;font-family:'Fredoka One',cursive;font-size:10px;color:var(--muted2);min-width:32px;justify-content:flex-end;padding-right:4px;}
+
+/* ══ LIMBO ══ */
+.limbo-area{max-width:420px;margin:0 auto;}
+.limbo-display{background:var(--surface);border:2px solid var(--border2);border-radius:16px;padding:28px;text-align:center;margin-bottom:14px;}
+.limbo-big-num{font-family:'Fredoka One',cursive;font-size:64px;color:var(--green);text-shadow:0 0 24px rgba(77,219,106,0.5);transition:all 0.3s;line-height:1;margin-bottom:4px;}
+.limbo-big-num.win{color:var(--green);}
+.limbo-big-num.lose{color:var(--melon);text-shadow:0 0 24px rgba(247,69,58,0.5);}
+.limbo-target-row{background:var(--surface);border:2px solid var(--border2);border-radius:14px;padding:14px;}
+.limbo-history{display:flex;gap:5px;flex-wrap:wrap;margin-top:10px;}
+.limbo-pill{padding:3px 9px;border-radius:20px;font-family:'Fredoka One',cursive;font-size:11px;}
+.limbo-pill.win{background:rgba(77,219,106,0.2);color:var(--green);}
+.limbo-pill.lose{background:rgba(247,69,58,0.2);color:var(--melon);}
 </style>
 </head>
 <body>
@@ -296,6 +360,12 @@ header{position:relative;z-index:10;padding:13px 18px 11px;background:var(--surf
   <button class="tab-btn" onclick="switchGame('dice',this)"><span class="tab-icon">🎲</span> Dice</button>
   <button class="tab-btn" onclick="switchGame('crash',this)"><span class="tab-icon">📈</span> Crash</button>
   <button class="tab-btn" onclick="switchGame('mines',this)"><span class="tab-icon">💣</span> Mines</button>
+  <button class="tab-btn" onclick="switchGame('keno',this)"><span class="tab-icon">🔢</span> Keno</button>
+  <button class="tab-btn" onclick="switchGame('poker',this)"><span class="tab-icon">♠️</span> Video Poker</button>
+  <button class="tab-btn" onclick="switchGame('baccarat',this)"><span class="tab-icon">🎰</span> Baccarat</button>
+  <button class="tab-btn" onclick="switchGame('wheel',this)"><span class="tab-icon">🎡</span> Wheel</button>
+  <button class="tab-btn" onclick="switchGame('dragon',this)"><span class="tab-icon">🐉</span> Dragon Tower</button>
+  <button class="tab-btn" onclick="switchGame('limbo',this)"><span class="tab-icon">🎯</span> Limbo</button>
 </div>
 
 <div class="game-area">
@@ -573,6 +643,205 @@ header{position:relative;z-index:10;padding:13px 18px 11px;background:var(--surf
   </div>
 </div>
 
+<!-- KENO -->
+<div class="game-screen" id="screen-keno">
+  <div class="bet-row">
+    <label>BET</label>
+    <input class="bet-input" id="keno-bet" type="number" value="10" min="1">
+    <div class="bet-quick">
+      <button class="bq-btn" onclick="quickBet('keno-bet',5)">5</button>
+      <button class="bq-btn" onclick="quickBet('keno-bet',10)">10</button>
+      <button class="bq-btn" onclick="quickBet('keno-bet',25)">25</button>
+      <button class="bq-btn" onclick="halfBet('keno-bet')">½</button>
+      <button class="bq-btn" onclick="maxBet('keno-bet')">MAX</button>
+    </div>
+    <button class="play-btn" id="keno-play" onclick="kenoPlay()">🔢 DRAW</button>
+  </div>
+  <div class="result-flash" id="keno-result"></div>
+  <div class="keno-area">
+    <div style="font-size:11px;color:var(--muted2);font-weight:800;letter-spacing:2px;margin-bottom:8px;">PICK 1–10 NUMBERS</div>
+    <div class="keno-grid" id="keno-grid"></div>
+    <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:11px;color:var(--muted2);font-weight:700;">
+      <span id="keno-picked-count">Picked: 0</span>
+      <span id="keno-payout-info">Pick numbers to see payout</span>
+    </div>
+  </div>
+</div>
+
+<!-- VIDEO POKER -->
+<div class="game-screen" id="screen-poker">
+  <div class="bet-row">
+    <label>BET</label>
+    <input class="bet-input" id="poker-bet" type="number" value="10" min="1">
+    <div class="bet-quick">
+      <button class="bq-btn" onclick="quickBet('poker-bet',5)">5</button>
+      <button class="bq-btn" onclick="quickBet('poker-bet',10)">10</button>
+      <button class="bq-btn" onclick="quickBet('poker-bet',25)">25</button>
+      <button class="bq-btn" onclick="halfBet('poker-bet')">½</button>
+      <button class="bq-btn" onclick="maxBet('poker-bet')">MAX</button>
+    </div>
+    <button class="play-btn" id="poker-deal-btn" onclick="pokerDeal()">🃏 DEAL</button>
+  </div>
+  <div class="result-flash" id="poker-result"></div>
+  <div class="poker-area">
+    <div class="poker-hand" id="poker-hand"></div>
+    <div id="poker-hold-labels" style="display:flex;gap:8px;justify-content:center;margin:6px 0;min-height:22px;"></div>
+    <div style="text-align:center;margin-top:8px;">
+      <button class="play-btn" id="poker-draw-btn" onclick="pokerDraw()" style="display:none;">🔄 DRAW</button>
+    </div>
+    <div class="poker-paytable">
+      <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:var(--muted2);margin-bottom:7px;grid-column:1/-1;">PAYTABLE</div>
+      <div class="pp-row"><span>Royal Flush</span><span class="pp-m">×250</span></div>
+      <div class="pp-row"><span>Straight Flush</span><span class="pp-m">×50</span></div>
+      <div class="pp-row"><span>Four of a Kind</span><span class="pp-m">×25</span></div>
+      <div class="pp-row"><span>Full House</span><span class="pp-m">×9</span></div>
+      <div class="pp-row"><span>Flush</span><span class="pp-m">×6</span></div>
+      <div class="pp-row"><span>Straight</span><span class="pp-m">×4</span></div>
+      <div class="pp-row"><span>Three of a Kind</span><span class="pp-m">×3</span></div>
+      <div class="pp-row"><span>Two Pair</span><span class="pp-m">×2</span></div>
+      <div class="pp-row"><span>Jacks or Better</span><span class="pp-m">×1</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- BACCARAT -->
+<div class="game-screen" id="screen-baccarat">
+  <div class="bet-row">
+    <label>BET</label>
+    <input class="bet-input" id="bac-bet" type="number" value="10" min="1">
+    <div class="bet-quick">
+      <button class="bq-btn" onclick="quickBet('bac-bet',5)">5</button>
+      <button class="bq-btn" onclick="quickBet('bac-bet',10)">10</button>
+      <button class="bq-btn" onclick="quickBet('bac-bet',25)">25</button>
+      <button class="bq-btn" onclick="halfBet('bac-bet')">½</button>
+      <button class="bq-btn" onclick="maxBet('bac-bet')">MAX</button>
+    </div>
+    <button class="play-btn" id="bac-play" onclick="bacPlay()">🎰 DEAL</button>
+  </div>
+  <div class="result-flash" id="bac-result"></div>
+  <div class="bac-area">
+    <div class="bac-picks">
+      <button class="bac-pick-btn" id="bac-player-btn" onclick="bacPick('player',this)">👤 PLAYER<span class="bac-odds">×2</span></button>
+      <button class="bac-pick-btn" id="bac-tie-btn" onclick="bacPick('tie',this)">🤝 TIE<span class="bac-odds">×8</span></button>
+      <button class="bac-pick-btn" id="bac-banker-btn" onclick="bacPick('banker',this)">🏦 BANKER<span class="bac-odds">×1.95</span></button>
+    </div>
+    <div class="bac-table">
+      <div class="bac-zone">
+        <div class="bac-zone-label">PLAYER</div>
+        <div class="card-row" id="bac-player-cards" style="justify-content:center;min-height:76px;"></div>
+        <div class="score-badge" id="bac-player-score" style="display:block;text-align:center;">—</div>
+      </div>
+      <div class="bac-vs">VS</div>
+      <div class="bac-zone">
+        <div class="bac-zone-label">BANKER</div>
+        <div class="card-row" id="bac-banker-cards" style="justify-content:center;min-height:76px;"></div>
+        <div class="score-badge" id="bac-banker-score" style="display:block;text-align:center;">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WHEEL OF FORTUNE -->
+<div class="game-screen" id="screen-wheel">
+  <div class="bet-row">
+    <label>BET</label>
+    <input class="bet-input" id="wheel-bet" type="number" value="10" min="1">
+    <div class="bet-quick">
+      <button class="bq-btn" onclick="quickBet('wheel-bet',5)">5</button>
+      <button class="bq-btn" onclick="quickBet('wheel-bet',10)">10</button>
+      <button class="bq-btn" onclick="quickBet('wheel-bet',25)">25</button>
+      <button class="bq-btn" onclick="halfBet('wheel-bet')">½</button>
+      <button class="bq-btn" onclick="maxBet('wheel-bet')">MAX</button>
+    </div>
+    <button class="play-btn" id="wheel-play" onclick="wheelSpin()">🎡 SPIN</button>
+  </div>
+  <div class="result-flash" id="wheel-result"></div>
+  <div class="wheel-fortune-area">
+    <div style="position:relative;display:flex;justify-content:center;align-items:center;margin-bottom:12px;">
+      <canvas id="wheel-canvas" width="300" height="300"></canvas>
+      <div class="wheel-pointer">▼</div>
+    </div>
+    <div style="text-align:center;font-family:'Fredoka One',cursive;font-size:13px;color:var(--muted2);" id="wheel-info">Spin the wheel!</div>
+  </div>
+</div>
+
+<!-- DRAGON TOWER -->
+<div class="game-screen" id="screen-dragon">
+  <div class="bet-row">
+    <label>BET</label>
+    <input class="bet-input" id="dragon-bet" type="number" value="10" min="1">
+    <div class="bet-quick">
+      <button class="bq-btn" onclick="quickBet('dragon-bet',5)">5</button>
+      <button class="bq-btn" onclick="quickBet('dragon-bet',10)">10</button>
+      <button class="bq-btn" onclick="quickBet('dragon-bet',25)">25</button>
+      <button class="bq-btn" onclick="halfBet('dragon-bet')">½</button>
+      <button class="bq-btn" onclick="maxBet('dragon-bet')">MAX</button>
+    </div>
+    <button class="play-btn" id="dragon-start-btn" onclick="dragonStart()">🐉 START</button>
+  </div>
+  <div class="result-flash" id="dragon-result"></div>
+  <div class="dragon-area">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div style="font-size:11px;color:var(--muted2);font-weight:800;letter-spacing:2px;">DIFFICULTY:</div>
+      <div style="display:flex;gap:6px;">
+        <button class="dragon-diff-btn active" id="dd-easy" onclick="dragonSetDiff('easy',this)">EASY (3 eggs)</button>
+        <button class="dragon-diff-btn" id="dd-medium" onclick="dragonSetDiff('medium',this)">MED (2 eggs)</button>
+        <button class="dragon-diff-btn" id="dd-hard" onclick="dragonSetDiff('hard',this)">HARD (1 egg)</button>
+      </div>
+    </div>
+    <div class="dragon-tower" id="dragon-tower"></div>
+    <div style="display:flex;gap:10px;align-items:center;margin-top:10px;">
+      <button class="mines-cashout-btn" id="dragon-cashout-btn" onclick="dragonCashout()" disabled style="flex:1;">
+        💰 Cash Out — <span id="dragon-cashout-val">0</span> 👑
+      </button>
+      <div style="font-family:'Fredoka One',cursive;font-size:14px;color:var(--gold);" id="dragon-mult-info">×1.00</div>
+    </div>
+  </div>
+</div>
+
+<!-- LIMBO -->
+<div class="game-screen" id="screen-limbo">
+  <div class="bet-row">
+    <label>BET</label>
+    <input class="bet-input" id="limbo-bet" type="number" value="10" min="1">
+    <div class="bet-quick">
+      <button class="bq-btn" onclick="quickBet('limbo-bet',5)">5</button>
+      <button class="bq-btn" onclick="quickBet('limbo-bet',10)">10</button>
+      <button class="bq-btn" onclick="quickBet('limbo-bet',25)">25</button>
+      <button class="bq-btn" onclick="halfBet('limbo-bet')">½</button>
+      <button class="bq-btn" onclick="maxBet('limbo-bet')">MAX</button>
+    </div>
+    <button class="play-btn" id="limbo-play" onclick="limboPlay()">🎯 ROLL</button>
+  </div>
+  <div class="result-flash" id="limbo-result"></div>
+  <div class="limbo-area">
+    <div class="limbo-display">
+      <div class="limbo-big-num" id="limbo-num">?</div>
+      <div style="font-size:11px;color:var(--muted2);font-weight:700;letter-spacing:1px;">RESULT</div>
+    </div>
+    <div class="limbo-target-row">
+      <label style="font-size:12px;font-weight:800;color:var(--muted2);letter-spacing:1px;">TARGET MULTIPLIER</label>
+      <div style="display:flex;gap:10px;align-items:center;margin-top:8px;">
+        <input class="bet-input" id="limbo-target" type="number" value="2" min="1.01" max="1000000" step="0.1" style="width:100px;font-size:18px;">
+        <div style="font-size:12px;color:var(--muted2);">×</div>
+        <div style="flex:1;">
+          <div style="font-size:11px;color:var(--muted2);font-weight:700;" id="limbo-chance">Win chance: 49%</div>
+          <div style="font-size:11px;color:var(--gold);font-weight:700;" id="limbo-payout">Payout: ×2.00</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
+        <button class="bq-btn" onclick="setLimboTarget(1.5)">×1.5</button>
+        <button class="bq-btn" onclick="setLimboTarget(2)">×2</button>
+        <button class="bq-btn" onclick="setLimboTarget(3)">×3</button>
+        <button class="bq-btn" onclick="setLimboTarget(5)">×5</button>
+        <button class="bq-btn" onclick="setLimboTarget(10)">×10</button>
+        <button class="bq-btn" onclick="setLimboTarget(100)">×100</button>
+      </div>
+    </div>
+    <div class="limbo-history" id="limbo-history"></div>
+  </div>
+</div>
+
 </div><!-- /game-area -->
 <!-- LEADERBOARD MODAL -->
 <div class="modal-overlay" id="lb-modal" onclick="if(event.target===this)closeLB()">
@@ -603,7 +872,7 @@ let save=defSave();
 try{const r=localStorage.getItem(SAVE_KEY);if(r){save=JSON.parse(r);if(!save.stats)save.stats=defSave().stats;if(!save.stats.games)save.stats.games=defSave().stats.games;const dg=defSave().stats.games;for(const g of Object.keys(dg))if(!save.stats.games[g])save.stats.games[g]=dg[g];save.sessions=(save.sessions||0)+1;}}catch(e){save=defSave();}
 let crowns=save.crowns||100;
 function persist(){save.crowns=crowns;try{localStorage.setItem(SAVE_KEY,JSON.stringify(save));}catch(e){}}
-function recordBet(game,betAmt,wonAmt,isWin){const s=save.stats;s.totalBet+=betAmt;s.totalWon+=wonAmt;s.bets++;if(isWin)s.wins++;const net=wonAmt-betAmt;if(net>s.biggestWin)s.biggestWin=net;const g=s.games[game];if(g){g.bets++;g.bet+=betAmt;g.won+=wonAmt;if(isWin)g.wins++;}persist();}
+let recordBet=function(game,betAmt,wonAmt,isWin){const s=save.stats;s.totalBet+=betAmt;s.totalWon+=wonAmt;s.bets++;if(isWin)s.wins++;const net=wonAmt-betAmt;if(net>s.biggestWin)s.biggestWin=net;const g=s.games[game];if(g){g.bets++;g.bet+=betAmt;g.won+=wonAmt;if(isWin)g.wins++;}persist();};
 
 /* ══ SEEDS BG ══ */
 const seedsEl=document.getElementById('seeds');
@@ -804,16 +1073,14 @@ async function lbRenderList() {
   }
 }
 
-// Submit score whenever a bet is recorded
+// Auto-submit to leaderboard after each recordBet call (debounced)
+let _lbSubmitTimer = null;
 const _origRecordBet = recordBet;
-// Wrap persist to auto-submit after score changes
-const _origPersist = persist;
-function persist() {
-  _origPersist();
-  // Debounced leaderboard submit
-  clearTimeout(persist._lbTimer);
-  persist._lbTimer = setTimeout(lbSubmitScore, 2000);
-}
+recordBet = function(game, betAmt, wonAmt, isWin) {
+  _origRecordBet(game, betAmt, wonAmt, isWin);
+  clearTimeout(_lbSubmitTimer);
+  _lbSubmitTimer = setTimeout(lbSubmitScore, 2000);
+};
 
 /* ══ INIT ══ */
 document.getElementById('crown-display').textContent=crowns;
