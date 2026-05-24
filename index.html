@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEST LUCK — Melon Casino</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0d1a0f;--surface:#122016;--surface2:#1a2e1e;--surface3:#213826;
+  --border:rgba(100,220,80,0.12);--border2:rgba(100,220,80,0.25);
+  --green:#4ddb6a;--green2:#2ecc52;--lime:#b5f03a;
+  --melon:#f7453a;--melon2:#ff6b5b;--seed:#1a3a1a;
+  --gold:#ffd44d;--gold2:#ffb800;--white:#eafff0;--muted:#4a6b4e;--muted2:#7aab7e;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 80%,rgba(77,219,106,0.07) 0%,transparent 70%),radial-gradient(ellipse 50% 50% at 80% 20%,rgba(247,69,58,0.06) 0%,transparent 70%),repeating-linear-gradient(135deg,transparent,transparent 30px,rgba(77,219,106,0.015) 30px,rgba(77,219,106,0.015) 31px);pointer-events:none;z-index:0;}
+.seed-bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.seed-bg span{position:absolute;font-size:18px;opacity:0.06;animation:floatSeed linear infinite;}
+@keyframes floatSeed{from{transform:translateY(110vh) rotate(0deg)}to{transform:translateY(-10vh) rotate(360deg)}}
+
+header{position:relative;z-index:10;padding:13px 18px 11px;background:var(--surface);border-bottom:2px solid var(--border2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.logo{display:flex;align-items:center;gap:9px;}
+.logo-icon{font-size:26px;animation:wobble 3s ease-in-out infinite;filter:drop-shadow(0 0 10px rgba(247,69,58,0.5));}
+@keyframes wobble{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+.logo-text{font-family:'Fredoka One',cursive;font-size:20px;background:linear-gradient(135deg,var(--lime),var(--green),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.logo-sub{font-size:8px;font-weight:700;letter-spacing:3px;color:var(--muted2);text-transform:uppercase;}
+.header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.crown-display{display:flex;align-items:center;gap:7px;background:var(--surface2);border:2px solid rgba(255,212,77,0.4);border-radius:50px;padding:5px 14px;box-shadow:0 0 20px rgba(255,212,77,0.1);}
+.crown-icon{font-size:18px;}
+.crown-amount{font-family:'Fredoka One',cursive;font-size:20px;color:var(--gold);text-shadow:0 0 12px rgba(255,212,77,0.5);min-width:50px;transition:all 0.3s;}
+.crown-label{font-size:9px;color:var(--muted2);font-weight:700;letter-spacing:1px;}
+.stats-btn{padding:5px 12px;border-radius:50px;border:2px solid var(--border2);background:var(--surface2);color:var(--muted2);font-family:'Fredoka One',cursive;font-size:12px;cursor:pointer;transition:all 0.2s;}
+.stats-btn:hover{border-color:var(--green);color:var(--green);}
+
+.bust-banner{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.88);align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+.bust-banner.show{display:flex;}
+.bust-box{background:var(--surface);border:3px solid var(--melon);border-radius:22px;padding:32px 40px;text-align:center;box-shadow:0 0 60px rgba(247,69,58,0.4);}
+.bust-box h2{font-family:'Fredoka One',cursive;font-size:36px;color:var(--melon);margin-bottom:8px;}
+.bust-box p{font-size:14px;color:var(--muted2);margin-bottom:18px;}
+.bust-btn{padding:11px 30px;background:linear-gradient(135deg,var(--green),var(--lime));border:none;border-radius:50px;font-family:'Fredoka One',cursive;font-size:17px;color:#0d1a0f;cursor:pointer;transition:all 0.15s;box-shadow:0 6px 20px rgba(77,219,106,0.4);}
+.bust-btn:hover{transform:scale(1.05);}
+
+.modal-overlay{display:none;position:fixed;inset:0;z-index:900;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal-box{background:var(--surface);border:2px solid var(--border2);border-radius:22px;padding:24px;max-width:440px;width:92%;max-height:85vh;overflow-y:auto;}
+.modal-box h2{font-family:'Fredoka One',cursive;font-size:22px;color:var(--green);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;}
+.modal-close{cursor:pointer;color:var(--muted2);font-size:18px;}
+.modal-close:hover{color:var(--melon);}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.stat-card{background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:10px 12px;}
+.stat-card .s-label{font-size:9px;font-weight:800;letter-spacing:2px;color:var(--muted2);margin-bottom:3px;}
+.stat-card .s-val{font-family:'Fredoka One',cursive;font-size:20px;color:var(--white);}
+.stat-card .s-val.green{color:var(--green);}
+.stat-card .s-val.red{color:var(--melon);}
+.stat-card .s-val.gold{color:var(--gold);}
+.game-stats-table{width:100%;border-collapse:collapse;font-size:12px;}
+.game-stats-table th{text-align:left;padding:5px 7px;color:var(--muted2);font-size:9px;font-weight:800;letter-spacing:2px;border-bottom:1px solid var(--border);}
+.game-stats-table td{padding:6px 7px;border-bottom:1px solid var(--border);}
+.game-stats-table tr:last-child td{border-bottom:none;}
+.reset-stats-btn{width:100%;margin-top:12px;padding:9px;border-radius:9px;border:2px solid rgba(247,69,58,0.3);background:rgba(247,69,58,0.08);color:var(--melon);font-family:'Fredoka One',cursive;font-size:13px;cursor:pointer;transition:all 0.15s;}
+.reset-stats-btn:hover{background:rgba(247,69,58,0.18);border-color:var(--melon);}
+
+.game-tabs{position:relative;z-index:10;display:flex;gap:5px;padding:10px 14px;background:var(--surface);border-bottom:2px solid var(--border);overflow-x:auto;scrollbar-width:none;}
+.game-tabs::-webkit-scrollbar{display:none;}
+.tab-btn{display:flex;align-items:center;gap:5px;padding:7px 13px;border-radius:50px;border:2px solid var(--border2);background:var(--surface2);color:var(--muted2);font-family:'Fredoka One',cursive;font-size:12px;cursor:pointer;white-space:nowrap;transition:all 0.2s;}
+.tab-btn:hover{border-color:var(--green);color:var(--green);background:rgba(77,219,106,0.08);}
+.tab-btn.active{background:linear-gradient(135deg,var(--green2),var(--lime));border-color:transparent;color:#0d1a0f;box-shadow:0 4px 14px rgba(77,219,106,0.35);}
+.tab-icon{font-size:14px;}
+
+.game-area{position:relative;z-index:5;padding:18px;min-height:calc(100vh-150px);}
+.game-screen{display:none;}
+.game-screen.active{display:block;}
+
+.bet-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px;background:var(--surface);border:2px solid var(--border2);border-radius:12px;padding:10px 14px;}
+.bet-row label{font-size:11px;font-weight:700;color:var(--muted2);letter-spacing:1px;}
+.bet-input{width:74px;padding:5px 8px;background:var(--surface2);border:2px solid var(--border2);border-radius:7px;color:var(--gold);font-family:'Fredoka One',cursive;font-size:15px;outline:none;text-align:center;transition:border-color 0.2s;}
+.bet-input:focus{border-color:var(--gold);}
+.bet-quick{display:flex;gap:4px;flex-wrap:wrap;}
+.bq-btn{padding:4px 8px;border-radius:6px;border:1.5px solid var(--border2);background:var(--surface2);color:var(--muted2);font-size:10px;font-weight:700;cursor:pointer;transition:all 0.15s;}
+.bq-btn:hover{border-color:var(--gold);color:var(--gold);}
+.play-btn{margin-left:auto;padding:8px 20px;border-radius:50px;border:none;background:linear-gradient(135deg,var(--melon),var(--melon2));color:white;font-family:'Fredoka One',cursive;font-size:14px;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 14px rgba(247,69,58,0.35);}
+.play-btn:hover{transform:translateY(-2px);box-shadow:0 7px 22px rgba(247,69,58,0.5);}
+.play-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;}
+
+.result-flash{text-align:center;padding:10px;border-radius:9px;font-family:'Fredoka One',cursive;font-size:18px;margin-bottom:12px;opacity:0;transition:opacity 0.3s;border:2px solid transparent;}
+.result-flash.show{opacity:1;}
+.result-flash.win{background:rgba(77,219,106,0.1);border-color:var(--green);color:var(--green);}
+.result-flash.lose{background:rgba(247,69,58,0.1);border-color:var(--melon);color:var(--melon);}
+.result-flash.push{background:rgba(255,212,77,0.1);border-color:var(--gold);color:var(--gold);}
+
+/* PLINKO */
+#plinko-canvas-wrap{position:relative;background:var(--surface);border:2px solid var(--border2);border-radius:16px;overflow:hidden;margin:0 auto;max-width:420px;}
+#plinko-canvas{display:block;width:100%;}
+.plinko-buckets{display:flex;background:var(--surface2);border-top:2px solid var(--border2);}
+.plinko-bucket{flex:1;text-align:center;padding:5px 1px;font-family:'Fredoka One',cursive;font-size:9px;border-right:1px solid var(--border);}
+.plinko-bucket:last-child{border-right:none;}
+
+/* BLACKJACK */
+.bj-table{background:var(--surface);border:2px solid var(--border2);border-radius:16px;padding:16px;max-width:560px;margin:0 auto;}
+.bj-zone-label{font-size:9px;font-weight:800;letter-spacing:3px;color:var(--muted2);margin-bottom:7px;}
+.card-row{display:flex;gap:6px;flex-wrap:wrap;min-height:80px;align-items:center;margin-bottom:10px;}
+.card{width:50px;height:70px;border-radius:6px;border:2px solid rgba(255,255,255,0.15);display:flex;flex-direction:column;justify-content:space-between;padding:4px;font-family:'Fredoka One',cursive;position:relative;box-shadow:0 4px 10px rgba(0,0,0,0.4);animation:cardDeal 0.25s cubic-bezier(0.16,1,0.3,1);flex-shrink:0;}
+@keyframes cardDeal{from{transform:scale(0.7) rotate(-5deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+.card.red{background:#fff5f5;color:var(--melon);}
+.card.black{background:#f0fff4;color:#1a3a1a;}
+.card.back{background:linear-gradient(135deg,var(--seed),#2a4a2a);border-color:var(--green2);}
+.card.back::after{content:'🍉';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:22px;}
+.card-val{font-size:12px;line-height:1;}
+.card-suit{font-size:14px;text-align:right;line-height:1;}
+.score-badge{display:inline-flex;align-items:center;background:var(--surface2);border:1.5px solid var(--border2);border-radius:20px;padding:3px 10px;font-family:'Fredoka One',cursive;font-size:12px;color:var(--white);margin-bottom:9px;}
+.bj-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:5px;}
+.bj-btn{padding:8px 17px;border-radius:50px;border:2px solid var(--border2);background:var(--surface2);color:var(--white);font-family:'Fredoka One',cursive;font-size:13px;cursor:pointer;transition:all 0.15s;}
+.bj-btn:hover{border-color:var(--green);color:var(--green);background:rgba(77,219,106,0.08);}
+.bj-btn:disabled{opacity:0.3;cursor:not-allowed;}
+.bj-btn.danger:hover{border-color:var(--melon);color:var(--melon);background:rgba(247,69,58,0.08);}
+
+/* SLOTS */
+.slots-machine{background:var(--surface);border:3px solid var(--border2);border-radius:22px;padding:22px;max-width:380px;margin:0 auto;text-align:center;}
+.slots-display{display:flex;gap:9px;justify-content:center;background:var(--surface2);border:2px solid var(--border2);border-radius:12px;padding:16px 12px;margin-bottom:16px;position:relative;overflow:hidden;}
+.slots-display::before{content:'';position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:64px;border-top:2px solid rgba(255,212,77,0.3);border-bottom:2px solid rgba(255,212,77,0.3);pointer-events:none;z-index:2;}
+.slot-reel{width:64px;height:64px;border-radius:9px;border:2px solid var(--border2);background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:36px;line-height:1;position:relative;z-index:1;}
+.slot-reel.spinning{animation:reelSpin 0.1s linear infinite;}
+@keyframes reelSpin{0%{transform:translateY(0)}25%{transform:translateY(-5px)}75%{transform:translateY(5px)}100%{transform:translateY(0)}}
+.slots-paytable{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:12px;text-align:left;}
+.pay-row{display:flex;justify-content:space-between;align-items:center;background:var(--surface2);border-radius:6px;padding:4px 7px;font-size:10px;}
+.pay-syms{font-size:13px;letter-spacing:1px;}
+.pay-mult{font-family:'Fredoka One',cursive;color:var(--gold);font-size:11px;}
+
+/* ROULETTE */
+.roulette-wrap{max-width:500px;margin:0 auto;}
+.wheel-area{display:flex;justify-content:center;margin-bottom:16px;}
+#roulette-canvas{border-radius:50%;box-shadow:0 0 40px rgba(77,219,106,0.2);}
+.roulette-bets{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;}
+.rb-btn{padding:9px 5px;border-radius:9px;border:2px solid var(--border2);background:var(--surface2);color:var(--white);font-family:'Fredoka One',cursive;font-size:12px;cursor:pointer;text-align:center;transition:all 0.15s;}
+.rb-btn:hover{border-color:var(--green);background:rgba(77,219,106,0.08);}
+.rb-btn.selected{border-color:var(--gold);background:rgba(255,212,77,0.12);color:var(--gold);}
+.rb-btn .rb-mult{font-size:9px;color:var(--muted2);display:block;margin-top:1px;font-family:'Nunito',sans-serif;font-weight:700;}
+
+/* COIN FLIP */
+.flip-area{max-width:340px;margin:0 auto;text-align:center;}
+.coin-wrap{height:140px;display:flex;align-items:center;justify-content:center;margin:14px 0;}
+.coin{width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:52px;box-shadow:0 8px 30px rgba(0,0,0,0.4),inset 0 2px 0 rgba(255,255,255,0.1);}
+.coin.flipping{animation:coinFlip 0.8s cubic-bezier(0.4,0,0.2,1) forwards;}
+@keyframes coinFlip{0%{transform:rotateY(0) scale(1)}25%{transform:rotateY(540deg) scale(1.15)}50%{transform:rotateY(1080deg) scale(0.9)}75%{transform:rotateY(1620deg) scale(1.1)}100%{transform:rotateY(1980deg) scale(1)}}
+.coin.heads{background:linear-gradient(135deg,#ffd44d,#ffb800);border:4px solid #c8920a;}
+.coin.tails{background:linear-gradient(135deg,var(--melon),var(--melon2));border:4px solid #c03a30;}
+.pick-btns{display:flex;gap:10px;justify-content:center;margin-bottom:12px;}
+.pick-btn{padding:10px 28px;border-radius:50px;border:2px solid var(--border2);background:var(--surface2);color:var(--white);font-family:'Fredoka One',cursive;font-size:15px;cursor:pointer;transition:all 0.2s;}
+.pick-btn.selected-heads{border-color:var(--gold);background:rgba(255,212,77,0.12);color:var(--gold);}
+.pick-btn.selected-tails{border-color:var(--melon);background:rgba(247,69,58,0.12);color:var(--melon);}
+.pick-btn:hover{transform:translateY(-2px);}
+
+/* HI-LO */
+.hilo-area{max-width:400px;margin:0 auto;text-align:center;}
+.hilo-card-display{background:var(--surface);border:2px solid var(--border2);border-radius:16px;padding:22px;margin-bottom:14px;}
+.hilo-big-card{width:84px;height:118px;border-radius:10px;border:3px solid rgba(255,255,255,0.2);display:inline-flex;flex-direction:column;justify-content:space-between;padding:7px;font-family:'Fredoka One',cursive;box-shadow:0 8px 24px rgba(0,0,0,0.5);animation:cardDeal 0.3s cubic-bezier(0.16,1,0.3,1);}
+.hilo-big-card.red{background:#fff5f5;color:var(--melon);}
+.hilo-big-card.black{background:#f0fff4;color:#1a3a1a;}
+.hilo-big-card .hb-val{font-size:22px;line-height:1;}
+.hilo-big-card .hb-suit{font-size:26px;text-align:right;line-height:1;}
+.hilo-streak{font-family:'Fredoka One',cursive;font-size:13px;color:var(--gold);margin-top:9px;}
+.hilo-mult-display{font-family:'Fredoka One',cursive;font-size:12px;color:var(--muted2);margin-top:4px;}
+.hilo-btns{display:flex;gap:10px;justify-content:center;margin-top:10px;}
+.hilo-btn{padding:10px 22px;border-radius:50px;border:2px solid var(--border2);background:var(--surface2);font-family:'Fredoka One',cursive;font-size:14px;cursor:pointer;transition:all 0.2s;}
+.hilo-btn:disabled{opacity:0.3;cursor:not-allowed;}
+.hilo-btn.up{color:var(--green);border-color:var(--green);}
+.hilo-btn.up:hover:not(:disabled){background:rgba(77,219,106,0.15);transform:translateY(-2px);}
+.hilo-btn.down{color:var(--melon);border-color:var(--melon);}
+.hilo-btn.down:hover:not(:disabled){background:rgba(247,69,58,0.15);transform:translateY(-2px);}
+.hilo-btn.cashout{color:var(--gold);border-color:var(--gold);}
+.hilo-btn.cashout:hover:not(:disabled){background:rgba(255,212,77,0.15);transform:translateY(-2px);}
+
+/* DICE */
+.dice-area{max-width:400px;margin:0 auto;text-align:center;}
+.dice-display{background:var(--surface);border:2px solid var(--border2);border-radius:16px;padding:22px;margin-bottom:14px;}
+.dice-row{display:flex;gap:12px;justify-content:center;margin-bottom:14px;}
+.die{width:66px;height:66px;border-radius:12px;background:var(--surface2);border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:36px;box-shadow:0 4px 14px rgba(0,0,0,0.4);transition:transform 0.1s;}
+.die.rolling{animation:diceRoll 0.1s ease infinite;}
+@keyframes diceRoll{0%{transform:rotate(0) scale(1)}25%{transform:rotate(8deg) scale(1.05)}75%{transform:rotate(-8deg) scale(0.95)}100%{transform:rotate(0) scale(1)}}
+.dice-target{font-family:'Fredoka One',cursive;font-size:13px;color:var(--muted2);margin-bottom:8px;}
+.dice-slider{width:100%;accent-color:var(--green);cursor:pointer;margin:8px 0;}
+.dice-odds{display:flex;justify-content:space-between;font-size:11px;color:var(--muted2);font-weight:700;}
+.dice-type-btns{display:flex;gap:7px;justify-content:center;margin-bottom:10px;}
+.dice-type-btn{padding:7px 16px;border-radius:50px;border:2px solid var(--border2);background:var(--surface2);color:var(--muted2);font-family:'Fredoka One',cursive;font-size:12px;cursor:pointer;transition:all 0.15s;}
+.dice-type-btn.active{border-color:var(--green);color:var(--green);background:rgba(77,219,106,0.1);}
+
+/* CRASH */
+.crash-area{max-width:480px;margin:0 auto;}
+#crash-canvas{width:100%;border-radius:14px;background:var(--surface);border:2px solid var(--border2);display:block;}
+.crash-mult-display{font-family:'Fredoka One',cursive;font-size:44px;text-align:center;color:var(--green);text-shadow:0 0 20px rgba(77,219,106,0.5);margin:7px 0;transition:color 0.3s;}
+.crash-mult-display.danger{color:var(--gold);text-shadow:0 0 20px rgba(255,212,77,0.5);}
+.crash-mult-display.crashed{color:var(--melon);text-shadow:0 0 20px rgba(247,69,58,0.5);}
+.crash-btns{display:flex;gap:9px;margin-top:10px;}
+.crash-go{flex:1;padding:11px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--green2),var(--lime));color:#0d1a0f;font-family:'Fredoka One',cursive;font-size:15px;cursor:pointer;transition:all 0.2s;}
+.crash-go:disabled{opacity:0.4;cursor:not-allowed;}
+.crash-cashout{flex:1;padding:11px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#0d1a0f;font-family:'Fredoka One',cursive;font-size:15px;cursor:pointer;transition:all 0.2s;display:none;}
+.crash-cashout:hover{transform:scale(1.02);}
+.crash-history{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px;}
+.crash-pill{padding:3px 9px;border-radius:20px;font-family:'Fredoka One',cursive;font-size:11px;}
+.crash-pill.low{background:rgba(247,69,58,0.2);color:var(--melon);}
+.crash-pill.mid{background:rgba(255,212,77,0.2);color:var(--gold);}
+.crash-pill.high{background:rgba(77,219,106,0.2);color:var(--green);}
+
+/* MINES */
+.mines-area{max-width:460px;margin:0 auto;}
+.mines-config{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.mines-config label{font-size:11px;font-weight:700;color:var(--muted2);}
+.mines-select{background:var(--surface2);border:2px solid var(--border2);border-radius:7px;color:var(--white);font-family:'Nunito',sans-serif;font-size:13px;padding:5px 9px;outline:none;cursor:pointer;}
+.mines-mult-info{font-family:'Fredoka One',cursive;font-size:13px;color:var(--gold);margin-left:auto;}
+.mines-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:12px;}
+.mine-cell{aspect-ratio:1;border-radius:9px;border:2px solid var(--border2);background:var(--surface2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:24px;transition:all 0.15s;}
+.mine-cell:hover:not(.revealed-gem):not(.revealed-mine):not(.disabled){border-color:var(--green);background:rgba(77,219,106,0.1);transform:scale(1.05);}
+.mine-cell.revealed-gem{background:rgba(77,219,106,0.15);border-color:var(--green);animation:gemReveal 0.3s cubic-bezier(0.16,1,0.3,1);}
+.mine-cell.revealed-mine{background:rgba(247,69,58,0.2);border-color:var(--melon);animation:mineReveal 0.3s ease;}
+.mine-cell.disabled{cursor:not-allowed;}
+.mine-cell.show-all-mine{background:rgba(247,69,58,0.08);border-color:rgba(247,69,58,0.35);}
+@keyframes gemReveal{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes mineReveal{0%{transform:scale(1)}30%{transform:scale(1.2)}100%{transform:scale(1)}}
+.mines-cashout-bar{display:flex;gap:9px;align-items:center;}
+.mines-cashout-btn{flex:1;padding:10px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#0d1a0f;font-family:'Fredoka One',cursive;font-size:14px;cursor:pointer;transition:all 0.2s;}
+.mines-cashout-btn:hover:not(:disabled){transform:scale(1.02);}
+.mines-cashout-btn:disabled{opacity:0.4;cursor:not-allowed;}
+.mines-potential{font-family:'Fredoka One',cursive;font-size:16px;color:var(--gold);}
+
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface2);border:2px solid var(--border2);border-radius:50px;padding:9px 22px;font-family:'Fredoka One',cursive;font-size:14px;z-index:999;transition:transform 0.35s cubic-bezier(0.16,1,0.3,1),opacity 0.3s;opacity:0;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,0.5);}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+#toast.win{border-color:var(--green);color:var(--green);}
+#toast.lose{border-color:var(--melon);color:var(--melon);}
+#toast.push{border-color:var(--gold);color:var(--gold);}
+@keyframes crownBump{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+.crown-bump{animation:crownBump 0.35s ease;}
+</style>
+</head>
+<body>
+<div class="seed-bg" id="seeds"></div>
+
+<div class="bust-banner" id="bust-banner">
+  <div class="bust-box">
+    <div style="font-size:50px;margin-bottom:7px;">🍉</div>
+    <h2>BUST!</h2>
+    <p>You ran out of crowns!<br>The melon gods are displeased.</p>
+    <button class="bust-btn" onclick="resetGame()">🔄 Start Fresh (100 Crowns)</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="stats-modal" onclick="if(event.target===this)closeStats()">
+  <div class="modal-box">
+    <h2>📊 Your Stats <span class="modal-close" onclick="closeStats()">✕</span></h2>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="s-label">ALL TIME WON</div><div class="s-val gold" id="st-total-won">0</div></div>
+      <div class="stat-card"><div class="s-label">NET PROFIT</div><div class="s-val" id="st-net">0</div></div>
+      <div class="stat-card"><div class="s-label">TOTAL BETS</div><div class="s-val" id="st-bets">0</div></div>
+      <div class="stat-card"><div class="s-label">WIN RATE</div><div class="s-val green" id="st-winrate">0%</div></div>
+      <div class="stat-card"><div class="s-label">BIGGEST WIN</div><div class="s-val green" id="st-biggest">0</div></div>
+      <div class="stat-card"><div class="s-label">SESSIONS</div><div class="s-val" id="st-sessions">0</div></div>
+    </div>
+    <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:var(--muted2);margin-bottom:7px;">BY GAME</div>
+    <table class="game-stats-table">
+      <thead><tr><th>GAME</th><th>BETS</th><th>WINS</th><th>NET</th></tr></thead>
+      <tbody id="game-stats-rows"></tbody>
+    </table>
+    <button class="reset-stats-btn" onclick="resetStats()">🗑 Reset All Stats</button>
+  </div>
+</div>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🍉</div>
+    <div>
+      <div class="logo-text">TEST LUCK</div>
+      <div class="logo-sub">Melon Casino</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <button class="stats-btn" onclick="openStats()">📊 Stats</button>
+    <button class="stats-btn" onclick="openLB()" style="border-color:rgba(255,212,77,0.4);color:var(--gold);">🏆 Board</button>
+    <div class="crown-display">
+      <div class="crown-icon">👑</div>
+      <div>
+        <div class="crown-amount" id="crown-display">100</div>
+        <div class="crown-label">CROWNS</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="game-tabs">
+  <button class="tab-btn active" onclick="switchGame('plinko',this)"><span class="tab-icon">🎯</span> Plinko</button>
+  <button class="tab-btn" onclick="switchGame('blackjack',this)"><span class="tab-icon">🃏</span> Blackjack</button>
+  <button class="tab-btn" onclick="switchGame('slots',this)"><span class="tab-icon">🎰</span> Slots</button>
+  <button class="tab-btn" onclick="switchGame('roulette',this)"><span class="tab-icon">🎡</span> Roulette</button>
+  <button class="tab-btn" onclick="switchGame('coinflip',this)"><span class="tab-icon">🪙</span> Coin Flip</button>
+  <button class="tab-btn" onclick="switchGame('hilo',this)"><span class="tab-icon">🎴</span> Hi-Lo</button>
+  <button class="tab-btn" onclick="switchGame('dice',this)"><span class="tab-icon">🎲</span> Dice</button>
+  <button class="tab-btn" onclick="switchGame('crash',this)"><span class="tab-icon">📈</span> Crash</button>
+  <button class="tab-btn" onclick="switchGame('mines',this)"><span class="tab-icon">💣</span> Mines</button>
+</div>
+
+<div class="game-area">
+
+<!-- PLINKO -->
+<div class="game-screen active" id="screen-plinko">
+  <div class="bet-row">
+    <label>BET</label>
+    <input class="bet-input" id="plinko-bet" type="number" value="10" min="1">
+    <div class="bet-quick">
+      <button class="bq-btn" onclick="quickBet('plinko-bet',5)">5</button>
+      <button class="bq-btn" onclick="quickBet('plinko-bet',10)">10</button>
+      <button class="bq-btn" onclick="quickBet('plinko-bet',25)">25</button>
+      <button class="bq-btn" onclick="halfBet('plinko-bet')">½</button>
+      <button class="bq-btn" onclick="maxBet('plinko-bet')">MAX</button>
+    </div>
+    <button class="play-btn" id="plinko-play" onclick="dropPlinko()">🎯 DROP</button>
+  </div>
+  <div class="result-flash" id="plinko-result"></div>
+  <div id="plinko-canvas-wrap">
+    <canvas id="plinko-canvas" width="420" height="360"></canvas>
+    <div class="plinko-buckets" id="plinko-buckets"></div>
+  </div>
+</div>
+
+<!-- BLACKJACK -->
+<div class="game-screen" id="screen-blackjack">
+  <div class="bet-row">
+    <label>BET</label>
+    <input class="bet-input" id="bj-bet" type="number" value="10" min="1">
+    <div class="bet-quick">
+      <button class="bq-btn" onclick="quickBet('bj-bet',5)">5</button>
+      <button class="bq-btn" onclick="quickBet('bj-bet',10)">10</button>
+      <button class="bq-btn" onclick="quickBet('bj-bet',25)">25</button>
+      <button class="bq-btn" onclick="halfBet('bj-bet')">½</button>
+      <button class="bq-btn" onclick="maxBet('bj-bet')">MAX</button>
+    </div>
+    <button class="play-btn" id="bj-deal-btn" onclick="bjDeal()">🃏 DEAL</button>
+  </div>
+  <div class="result-flash" id="bj-result"></div>
+  <div class="bj-table">
+    <div class="bj-zone-label">🌿 DEALER</div>
+    <div class="card-row" id="dealer-cards"></div>
+    <div class="score-badge" id="dealer-score">?</div>
+    <hr style="border-color:var(--border);margin:10px 0;">
+    <div class="bj-zone-label">🍉 YOU</div>
+    <div class="card-row" id="player-cards"></div>
+    <div class="score-badge" id="player-score">0</div>
+    <div class="bj-actions">
+      <button class="bj-btn" id="bj-hit" onclick="bjHit()" disabled>HIT 🃏</button>
+      <button class="bj-btn" id="bj-stand" onclick="bjStand()" disabled>STAND ✋</button>
+      <button class="bj-btn danger" id="bj-double" onclick="bjDouble()" disabled>DOUBLE ×2</button>
+    </div>
+  </div>
+</div>
+
+<!-- SLOTS -->
+<div class="game-screen" id="screen-slots">
+  <div class="bet-row">
+    <label>BET</label>
+    <input class="bet-input" id="slots-bet" type="number" value="10" min="1">
+    <div class="bet-quick">
+      <button class="bq-btn" onclick="quickBet('slots-bet',5)">5</button>
+      <button class="bq-btn" onclick="quickBet('slots-bet',10)">10</button>
+      <button class="bq-btn" onclick="quickBet('slots-bet',25)">25</button>
+      <button class="bq-btn" onclick="halfBet('slots-bet')">½</button>
+      <button class="bq-btn" onclick="maxBet('slots-bet')">MAX</button>
+    </div>
+    <button class="play-btn" id="slots-play" onclick="spinSlots()">🎰 SPIN</button>
+  </div>
+  <div class="result-flash" id="slots-result"></div>
+  <div class="slots-machine">
+    <div style="font-family:'Fredoka One',cursive;font-size:11px;color:var(--muted2);letter-spacing:3px;margin-bottom:12px;">🍉 MELON SLOTS 🍉</div>
+    <div class="slots-display">
+      <div class="slot-reel" id="reel-0">🍉</div>
+      <div class="slot-reel" id="reel-1">🍈</div>
+      <div class="slot-reel" id="reel-2">🌱</div>
+    </div>
+    <div class="slots-paytable">
+      <div class="pay-row"><span class="pay-syms">🍉🍉🍉</span><span class="pay-mult">×20 JACKPOT</span></div>
+      <div class="pay-row"><span class="pay-syms">👑👑👑</span><span class="pay-mult">×15</span></div>
+      <div class="pay-row"><span class="pay-syms">🌟🌟🌟</span><span class="pay-mult">×10</span></div>
+      <div class="pay-row"><span class="pay-syms">🍈🍈🍈</span><span class="pay-mult">×5</span></div>
+      <div class="pay-row"><span class="pay-syms">🌱🌱🌱</span><span class="pay-mult">×3</span></div>
+      <div class="pay-row"><span class="pay-syms">💧💧💧</span><span class="pay-mult">×2</span></div>
+      <div class="pay-row"><span class="pay-syms">Any pair</span><span class="pay-mult">×1.5</span></div>
+      <div class="pay-row"><span class="pay-syms">No match</span><span class="pay-mult">×0 LOSE</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ROULETTE -->
+<div class="game-screen" id="screen-roulette">
+  <div class="bet-row">
+    <label>BET</label>
+    <input class="bet-input" id="roulette-bet" type="number" value="10" min="1">
+    <div class="bet-quick">
+      <button class="bq-btn" onclick="quickBet('roulette-bet',5)">5</button>
+      <button class="bq-btn" onclick="quickBet('roulette-bet',10)">10</button>
+      <button class="bq-btn" onclick="quickBet('roulette-bet',25)">25</button>
+      <button class="bq-btn" onclick="halfBet('roulette-bet')">½</button>
+      <button class="bq-btn" onclick="maxBet('roulette-bet')">MAX</button>
+    </div>
+    <button class="play-btn" id="roulette-play" onclick="spinRoulette()">🎡 SPIN</button>
+  </div>
+  <div class="result-flash" id="roulette-result"></div>
+  <div class="roulette-wrap">
+    <div class="wheel-area"><canvas id="roulette-canvas" width="200" height="200"></canvas></div>
+    <div style="font-family:'Fredoka One',cursive;font-size:10px;letter-spacing:2px;color:var(--muted2);text-align:center;margin-bottom:9px;">PICK YOUR BET</div>
+    <div class="roulette-bets">
+      <button class="rb-btn" onclick="selectRBet('red',this)">🍉 RED<span class="rb-mult">×2</span></button>
+      <button class="rb-btn" onclick="selectRBet('green',this)">🌿 GREEN<span class="rb-mult">×3</span></button>
+      <button class="rb-btn" onclick="selectRBet('black',this)">🌑 BLACK<span class="rb-mult">×2</span></button>
+      <button class="rb-btn" onclick="selectRBet('even',this)">EVEN<span class="rb-mult">×2</span></button>
+      <button class="rb-btn" onclick="selectRBet('odd',this)">ODD<span class="rb-mult">×2</span></button>
+      <button class="rb-btn" onclick="selectRBet('low',this)">LOW 1–18<span class="rb-mult">×2</span></button>
+    </div>
+    <div id="roulette-selected" style="text-align:center;font-size:11px;color:var(--muted2);font-weight:700;">No bet selected</div>
+  </div>
+</div>
+
+<!-- COIN FLIP -->
+<div class="game-screen" id="screen-coinflip">
+  <div class="bet-row">
+    <label>BET</label>
+    <input class="bet-input" id="flip-bet" type="number" value="10" min="1">
+    <div class="bet-quick">
+      <button class="bq-btn" onclick="quickBet('flip-bet',5)">5</button>
+      <button class="bq-btn" onclick="quickBet('flip-bet',10)">10</button>
+      <button class="bq-btn" onclick="quickBet('flip-bet',25)">25</button>
+      <button class="bq-btn" onclick="halfBet('flip-bet')">½</button>
+      <button class="bq-btn" onclick="maxBet('flip-bet')">MAX</button>
+    </div>
+    <button class="play-btn" id="flip-play" onclick="doFlip()">🪙 FLIP</button>
+  </div>
+  <div class="result-flash" id="flip-result"></div>
+  <div class="flip-area">
+    <div style="font-family:'Fredoka One',cursive;font-size:12px;color:var(--muted2);letter-spacing:2px;margin-bottom:9px;text-align:center;">PICK YOUR SIDE</div>
+    <div class="pick-btns">
+      <button class="pick-btn" id="pick-heads" onclick="pickSide('heads')">👑 Rind</button>
+      <button class="pick-btn" id="pick-tails" onclick="pickSide('tails')">🍉 Flesh</button>
+    </div>
+    <div class="coin-wrap"><div class="coin heads" id="coin-el">👑</div></div>
+    <div style="text-align:center;font-size:11px;color:var(--muted2);margin-top:5px;" id="flip-pick-label">Pick Rind or Flesh to start</div>
+  </div>
+</div>
+
+<!-- HI-LO -->
+<div class="game-screen" id="screen-hilo">
+  <div class="bet-row">
+    <label>BET</label>
+    <input class="bet-input" id="hilo-bet" type="number" value="10" min="1">
+    <div class="bet-quick">
+      <button class="bq-btn" onclick="quickBet('hilo-bet',5)">5</button>
+      <button class="bq-btn" onclick="quickBet('hilo-bet',10)">10</button>
+      <button class="bq-btn" onclick="quickBet('hilo-bet',25)">25</button>
+      <button class="bq-btn" onclick="halfBet('hilo-bet')">½</button>
+      <button class="bq-btn" onclick="maxBet('hilo-bet')">MAX</button>
+    </div>
+    <button class="play-btn" id="hilo-start-btn" onclick="hiloStart()">🎴 START</button>
+  </div>
+  <div class="result-flash" id="hilo-result"></div>
+  <div class="hilo-area">
+    <div class="hilo-card-display">
+      <div id="hilo-card-el" class="hilo-big-card black" style="margin:0 auto;">
+        <div class="hb-val">?</div><div class="hb-suit">?</div>
+      </div>
+      <div class="hilo-streak" id="hilo-streak">Start a round to play</div>
+      <div class="hilo-mult-display" id="hilo-mult-info">Multiplier: ×1.00</div>
+    </div>
+    <div class="hilo-btns">
+      <button class="hilo-btn up" id="hilo-higher" onclick="hiloGuess('higher')" disabled>⬆ HIGHER</button>
+      <button class="hilo-btn cashout" id="hilo-cashout" onclick="hiloCashout()" disabled>💰 CASH OUT</button>
+      <button class="hilo-btn down" id="hilo-lower" onclick="hiloGuess('lower')" disabled>⬇ LOWER</button>
+    </div>
+  </div>
+</div>
+
+<!-- DICE -->
+<div class="game-screen" id="screen-dice">
+  <div class="bet-row">
+    <label>BET</label>
+    <input class="bet-input" id="dice-bet" type="number" value="10" min="1">
+    <div class="bet-quick">
+      <button class="bq-btn" onclick="quickBet('dice-bet',5)">5</button>
+      <button class="bq-btn" onclick="quickBet('dice-bet',10)">10</button>
+      <button class="bq-btn" onclick="quickBet('dice-bet',25)">25</button>
+      <button class="bq-btn" onclick="halfBet('dice-bet')">½</button>
+      <button class="bq-btn" onclick="maxBet('dice-bet')">MAX</button>
+    </div>
+    <button class="play-btn" id="dice-play" onclick="rollDice()">🎲 ROLL</button>
+  </div>
+  <div class="result-flash" id="dice-result"></div>
+  <div class="dice-area">
+    <div class="dice-display">
+      <div class="dice-row">
+        <div class="die" id="die-0">⚂</div>
+        <div class="die" id="die-1">⚃</div>
+      </div>
+      <div class="dice-type-btns">
+        <button class="dice-type-btn active" id="dtype-over" onclick="setDiceType('over',this)">ROLL OVER</button>
+        <button class="dice-type-btn" id="dtype-under" onclick="setDiceType('under',this)">ROLL UNDER</button>
+      </div>
+      <div class="dice-target" id="dice-target-label">Target: over <span id="dice-target-val">7</span></div>
+      <input class="dice-slider" type="range" id="dice-slider" min="3" max="11" value="7" oninput="updateDiceTarget()">
+      <div class="dice-odds">
+        <span id="dice-win-chance">Win chance: 58%</span>
+        <span id="dice-payout-mult">Payout: ×1.69</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CRASH -->
+<div class="game-screen" id="screen-crash">
+  <div class="bet-row">
+    <label>BET</label>
+    <input class="bet-input" id="crash-bet" type="number" value="10" min="1">
+    <div class="bet-quick">
+      <button class="bq-btn" onclick="quickBet('crash-bet',5)">5</button>
+      <button class="bq-btn" onclick="quickBet('crash-bet',10)">10</button>
+      <button class="bq-btn" onclick="quickBet('crash-bet',25)">25</button>
+      <button class="bq-btn" onclick="halfBet('crash-bet')">½</button>
+      <button class="bq-btn" onclick="maxBet('crash-bet')">MAX</button>
+    </div>
+  </div>
+  <div class="result-flash" id="crash-result"></div>
+  <div class="crash-area">
+    <div class="crash-mult-display" id="crash-mult">1.00×</div>
+    <canvas id="crash-canvas" width="500" height="190"></canvas>
+    <div class="crash-btns">
+      <button class="crash-go" id="crash-go-btn">🚀 LAUNCH BET</button>
+      <button class="crash-cashout" id="crash-cashout-btn" onclick="crashCashout()">💰 CASH OUT</button>
+    </div>
+    <div style="font-size:10px;color:var(--muted2);font-weight:700;letter-spacing:1px;margin-top:8px;">RECENT</div>
+    <div class="crash-history" id="crash-history"></div>
+  </div>
+</div>
+
+<!-- MINES -->
+<div class="game-screen" id="screen-mines">
+  <div class="bet-row">
+    <label>BET</label>
+    <input class="bet-input" id="mines-bet" type="number" value="10" min="1">
+    <div class="bet-quick">
+      <button class="bq-btn" onclick="quickBet('mines-bet',5)">5</button>
+      <button class="bq-btn" onclick="quickBet('mines-bet',10)">10</button>
+      <button class="bq-btn" onclick="quickBet('mines-bet',25)">25</button>
+      <button class="bq-btn" onclick="halfBet('mines-bet')">½</button>
+      <button class="bq-btn" onclick="maxBet('mines-bet')">MAX</button>
+    </div>
+  </div>
+  <div class="result-flash" id="mines-result"></div>
+  <div class="mines-area">
+    <div class="mines-config">
+      <label>MINES:</label>
+      <select class="mines-select" id="mines-count" onchange="updateMinesInfo()">
+        <option value="1">1 Mine</option>
+        <option value="3" selected>3 Mines</option>
+        <option value="5">5 Mines</option>
+        <option value="10">10 Mines</option>
+        <option value="15">15 Mines</option>
+        <option value="20">20 Mines</option>
+        <option value="24">24 Mines</option>
+      </select>
+      <button class="play-btn" id="mines-start-btn" onclick="minesStart()" style="margin-left:0;">💣 START</button>
+      <div class="mines-mult-info" id="mines-mult-info">Next gem: ×1.04</div>
+    </div>
+    <div class="mines-grid" id="mines-grid"></div>
+    <div class="mines-cashout-bar">
+      <button class="mines-cashout-btn" id="mines-cashout-btn" onclick="minesCashout()" disabled>
+        💰 Cash Out — <span id="mines-cashout-val">0</span> 👑
+      </button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /game-area -->
+<!-- LEADERBOARD MODAL -->
+<div class="modal-overlay" id="lb-modal" onclick="if(event.target===this)closeLB()">
+  <div class="modal-box" style="max-width:500px;">
+    <h2>🏆 Leaderboard <span class="modal-close" onclick="closeLB()">✕</span></h2>
+
+    <!-- Name setup -->
+    <div id="lb-name-row" style="display:flex;gap:8px;margin-bottom:16px;align-items:center;">
+      <input id="lb-name-input" type="text" maxlength="18" placeholder="Enter your name…"
+        style="flex:1;padding:8px 12px;border-radius:8px;border:2px solid var(--border2);background:var(--surface2);color:var(--white);font-family:'Fredoka One',cursive;font-size:15px;outline:none;">
+      <button onclick="lbSetName()" style="padding:8px 16px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--green2),var(--lime));color:#0d1a0f;font-family:'Fredoka One',cursive;font-size:14px;cursor:pointer;">Save</button>
+    </div>
+
+    <div style="font-size:9px;font-weight:800;letter-spacing:2px;color:var(--muted2);margin-bottom:8px;">TOP PLAYERS — NET PROFIT</div>
+    <div id="lb-list" style="min-height:60px;"></div>
+
+    <div style="font-size:9px;color:var(--muted2);margin-top:14px;text-align:center;">Scores shared with all players on this artifact 🍉</div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ══ SAVE / LOAD ══ */
+const SAVE_KEY='melon_casino_v2';
+function defSave(){return{crowns:100,sessions:1,stats:{totalWon:0,totalBet:0,bets:0,wins:0,biggestWin:0,games:{plinko:{bets:0,wins:0,won:0,bet:0},blackjack:{bets:0,wins:0,won:0,bet:0},slots:{bets:0,wins:0,won:0,bet:0},roulette:{bets:0,wins:0,won:0,bet:0},coinflip:{bets:0,wins:0,won:0,bet:0},hilo:{bets:0,wins:0,won:0,bet:0},dice:{bets:0,wins:0,won:0,bet:0},crash:{bets:0,wins:0,won:0,bet:0},mines:{bets:0,wins:0,won:0,bet:0}}}};}
+let save=defSave();
+try{const r=localStorage.getItem(SAVE_KEY);if(r){save=JSON.parse(r);if(!save.stats)save.stats=defSave().stats;if(!save.stats.games)save.stats.games=defSave().stats.games;const dg=defSave().stats.games;for(const g of Object.keys(dg))if(!save.stats.games[g])save.stats.games[g]=dg[g];save.sessions=(save.sessions||0)+1;}}catch(e){save=defSave();}
+let crowns=save.crowns||100;
+function persist(){save.crowns=crowns;try{localStorage.setItem(SAVE_KEY,JSON.stringify(save));}catch(e){}}
+function recordBet(game,betAmt,wonAmt,isWin){const s=save.stats;s.totalBet+=betAmt;s.totalWon+=wonAmt;s.bets++;if(isWin)s.wins++;const net=wonAmt-betAmt;if(net>s.biggestWin)s.biggestWin=net;const g=s.games[game];if(g){g.bets++;g.bet+=betAmt;g.won+=wonAmt;if(isWin)g.wins++;}persist();}
+
+/* ══ SEEDS BG ══ */
+const seedsEl=document.getElementById('seeds');
+['🌱','🍉','🌿','💧','🍈'].forEach(s=>{for(let j=0;j<4;j++){const el=document.createElement('span');el.textContent=s;el.style.left=Math.random()*100+'%';el.style.animationDuration=(18+Math.random()*20)+'s';el.style.animationDelay=(-Math.random()*20)+'s';seedsEl.appendChild(el);}});
+
+/* ══ CROWN ══ */
+function updateCrowns(delta){crowns=Math.max(0,crowns+delta);const el=document.getElementById('crown-display');el.textContent=crowns;el.classList.remove('crown-bump');void el.offsetWidth;el.classList.add('crown-bump');persist();if(crowns===0)setTimeout(()=>document.getElementById('bust-banner').classList.add('show'),800);}
+function resetGame(){crowns=100;save.sessions=(save.sessions||1)+1;document.getElementById('crown-display').textContent=100;document.getElementById('bust-banner').classList.remove('show');bjPlaying=false;['bj-hit','bj-stand','bj-double'].forEach(id=>document.getElementById(id).disabled=true);document.getElementById('bj-deal-btn').disabled=false;['dealer-cards','player-cards'].forEach(id=>document.getElementById(id).innerHTML='');document.getElementById('dealer-score').textContent='?';document.getElementById('player-score').textContent='0';minesReset();persist();}
+function getBet(id){const v=parseInt(document.getElementById(id).value)||1;return Math.max(1,Math.min(v,crowns));}
+function quickBet(id,v){document.getElementById(id).value=Math.min(v,crowns);}
+function halfBet(id){document.getElementById(id).value=Math.max(1,Math.floor(crowns/2));}
+function maxBet(id){document.getElementById(id).value=crowns;}
+
+function showToast(msg,type='win'){const t=document.getElementById('toast');t.textContent=msg;t.className='show '+type;clearTimeout(t._timer);t._timer=setTimeout(()=>t.className='',2400);}
+function showResult(id,msg,type){const el=document.getElementById(id);el.textContent=msg;el.className='result-flash show '+type;setTimeout(()=>el.classList.remove('show'),3200);}
+function switchGame(name,btn){document.querySelectorAll('.game-screen').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById('screen-'+name).classList.add('active');btn.classList.add('active');}
+
+/* ══ STATS ══ */
+function openStats(){const s=save.stats;const net=s.totalWon-s.totalBet;const wr=s.bets>0?Math.round(s.wins/s.bets*100):0;document.getElementById('st-total-won').textContent=s.totalWon;const ne=document.getElementById('st-net');ne.textContent=(net>=0?'+':'')+net;ne.className='s-val '+(net>=0?'green':'red');document.getElementById('st-bets').textContent=s.bets;document.getElementById('st-winrate').textContent=wr+'%';document.getElementById('st-biggest').textContent='+'+s.biggestWin;document.getElementById('st-sessions').textContent=save.sessions||1;const names={plinko:'Plinko',blackjack:'Blackjack',slots:'Slots',roulette:'Roulette',coinflip:'Coin Flip',hilo:'Hi-Lo',dice:'Dice',crash:'Crash',mines:'Mines'};const tbody=document.getElementById('game-stats-rows');tbody.innerHTML='';for(const[key,g]of Object.entries(s.games)){if(g.bets===0)continue;const gnet=g.won-g.bet;const tr=document.createElement('tr');tr.innerHTML=`<td>${names[key]||key}</td><td>${g.bets}</td><td>${g.wins}</td><td style="color:${gnet>=0?'var(--green)':'var(--melon)'}">${gnet>=0?'+':''}${gnet}</td>`;tbody.appendChild(tr);}if(!tbody.children.length)tbody.innerHTML='<tr><td colspan="4" style="color:var(--muted2);padding:14px 7px;">No games played yet!</td></tr>';document.getElementById('stats-modal').classList.add('show');}
+function closeStats(){document.getElementById('stats-modal').classList.remove('show');}
+function resetStats(){if(!confirm('Reset all stats? Crowns unchanged.'))return;save.stats=defSave().stats;persist();openStats();showToast('Stats reset!','push');}
+
+/* ══ PLINKO ══ */
+const PLINKO_ROWS=8,PLINKO_MULTS=[10,3,1.5,1,0.5,1,1.5,3,10],PLINKO_COLORS=['#f7453a','#ff9a00','#ffd44d','#4ddb6a','#b5f03a','#4ddb6a','#ffd44d','#ff9a00','#f7453a'];
+let plinkoRunning=false;
+(function initPlinko(){drawPlinkoBase();const be=document.getElementById('plinko-buckets');be.innerHTML='';PLINKO_MULTS.forEach((m,i)=>{const b=document.createElement('div');b.className='plinko-bucket';b.style.color=PLINKO_COLORS[i];b.textContent='×'+m;be.appendChild(b);});})();
+function drawPlinkoBase(ctx){if(!ctx)ctx=document.getElementById('plinko-canvas').getContext('2d');ctx.clearRect(0,0,420,360);for(let row=0;row<PLINKO_ROWS;row++){const n=row+3;for(let col=0;col<n;col++){const x=210-(n-1)/2*38+col*38,y=30+row*38;ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fillStyle='rgba(77,219,106,0.7)';ctx.shadowBlur=8;ctx.shadowColor='#4ddb6a';ctx.fill();ctx.shadowBlur=0;}}}
+function dropPlinko(){if(plinkoRunning)return;const bet=getBet('plinko-bet');if(bet>crowns)return showToast('Not enough crowns!','lose');updateCrowns(-bet);plinkoRunning=true;document.getElementById('plinko-play').disabled=true;const canvas=document.getElementById('plinko-canvas');const ctx=canvas.getContext('2d');let col=0;const path=[col];for(let row=0;row<PLINKO_ROWS;row++){col+=Math.random()<0.5?0:1;path.push(col);}const bucketIndex=path[PLINKO_ROWS];const mult=PLINKO_MULTS[bucketIndex];let step=0;function animate(){drawPlinkoBase(ctx);const cr=Math.min(step,PLINKO_ROWS);const pc=path[cr];const n=cr+3;const bx=210-(n-1)/2*38+pc*38+(cr>0?19:0);const by=8+cr*38;ctx.beginPath();ctx.arc(bx,by,9,0,Math.PI*2);ctx.fillStyle='#f7453a';ctx.shadowBlur=16;ctx.shadowColor='#f7453a';ctx.fill();ctx.shadowBlur=0;step++;if(step<=PLINKO_ROWS+1)setTimeout(animate,115);else{const won=Math.round(bet*mult);updateCrowns(won);const net=won-bet;const isWin=mult>=1;recordBet('plinko',bet,won,isWin);if(isWin)showResult('plinko-result',`×${mult} — Won ${won} 👑 (+${net})`,'win');else showResult('plinko-result',`×${mult} — Lost ${bet-won} 👑`,'lose');showToast(isWin?`🍉 ×${mult}! +${net}`:`×${mult} — -${bet-won}`,isWin?'win':'lose');plinkoRunning=false;document.getElementById('plinko-play').disabled=false;}}animate();}
+
+/* ══ BLACKJACK ══ */
+const SUITS=['♠','♣','♥','♦'],VALS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+let bjDeck=[],bjPlayer=[],bjDealer=[],bjBet=0,bjPlaying=false;
+function buildDeck(){const d=[];for(const s of SUITS)for(const v of VALS)d.push({s,v});for(let i=d.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[d[i],d[j]]=[d[j],d[i]];}return d;}
+function cardVal(v){if(['J','Q','K'].includes(v))return 10;if(v==='A')return 11;return parseInt(v);}
+function handScore(hand){let t=0,a=0;for(const c of hand){t+=cardVal(c.v);if(c.v==='A')a++;}while(t>21&&a>0){t-=10;a--;}return t;}
+function renderCard(c,hidden=false){const el=document.createElement('div');if(hidden){el.className='card back';return el;}const r=c.s==='♥'||c.s==='♦';el.className='card '+(r?'red':'black');el.innerHTML=`<div class="card-val">${c.v}</div><div class="card-suit">${c.s}</div>`;return el;}
+function renderHand(id,hand,hs=false){const el=document.getElementById(id);el.innerHTML='';hand.forEach((c,i)=>el.appendChild(renderCard(c,hs&&i===1)));}
+function bjDeal(){const bet=getBet('bj-bet');if(bet>crowns)return showToast('Not enough crowns!','lose');bjBet=bet;updateCrowns(-bet);bjDeck=buildDeck();bjPlayer=[bjDeck.pop(),bjDeck.pop()];bjDealer=[bjDeck.pop(),bjDeck.pop()];bjPlaying=true;renderHand('player-cards',bjPlayer);renderHand('dealer-cards',bjDealer,true);document.getElementById('player-score').textContent=handScore(bjPlayer);document.getElementById('dealer-score').textContent=cardVal(bjDealer[0].v)+'?';document.getElementById('bj-result').className='result-flash';['bj-hit','bj-stand','bj-double'].forEach(id=>document.getElementById(id).disabled=false);document.getElementById('bj-deal-btn').disabled=true;document.getElementById('bj-double').disabled=crowns<bjBet;if(handScore(bjPlayer)===21)setTimeout(bjReveal,400);}
+function bjHit(){bjPlayer.push(bjDeck.pop());renderHand('player-cards',bjPlayer);const s=handScore(bjPlayer);document.getElementById('player-score').textContent=s;if(s>=21)bjReveal();}
+function bjStand(){bjReveal();}
+function bjDouble(){if(crowns<bjBet)return;updateCrowns(-bjBet);bjBet*=2;bjPlayer.push(bjDeck.pop());renderHand('player-cards',bjPlayer);document.getElementById('player-score').textContent=handScore(bjPlayer);bjReveal();}
+function bjReveal(){['bj-hit','bj-stand','bj-double'].forEach(id=>document.getElementById(id).disabled=true);while(handScore(bjDealer)<17)bjDealer.push(bjDeck.pop());renderHand('dealer-cards',bjDealer);const ds=handScore(bjDealer),ps=handScore(bjPlayer);document.getElementById('dealer-score').textContent=ds;document.getElementById('player-score').textContent=ps;let msg,type,won=0,isWin=false;if(ps>21){msg=`Bust! Lost ${bjBet} 👑`;type='lose';}else if(ds>21||ps>ds){const bj=ps===21&&bjPlayer.length===2;won=bj?Math.round(bjBet*2.5):bjBet*2;updateCrowns(won);isWin=true;msg=bj?`🍉 BLACKJACK! +${won} 👑`:`WIN! +${won} 👑`;type='win';}else if(ps===ds){updateCrowns(bjBet);won=bjBet;msg='PUSH — bet returned';type='push';}else{msg=`Dealer wins. Lost ${bjBet} 👑`;type='lose';}recordBet('blackjack',bjBet,won,isWin);showResult('bj-result',msg,type);showToast(msg,type);bjPlaying=false;document.getElementById('bj-deal-btn').disabled=false;}
+
+/* ══ SLOTS ══ */
+const SLOT_SYMS=['🍉','🍉','🍈','🌱','💧','🌟','👑','🌿'];
+function spinSlots(){const bet=getBet('slots-bet');if(bet>crowns)return showToast('Not enough crowns!','lose');updateCrowns(-bet);document.getElementById('slots-play').disabled=true;document.getElementById('slots-result').className='result-flash';const reels=[0,1,2].map(i=>document.getElementById('reel-'+i));reels.forEach(r=>r.classList.add('spinning'));const results=[],delays=[700,1000,1300];reels.forEach((r,i)=>{const iv=setInterval(()=>{r.textContent=SLOT_SYMS[Math.floor(Math.random()*SLOT_SYMS.length)];},60);setTimeout(()=>{clearInterval(iv);const sym=SLOT_SYMS[Math.floor(Math.random()*SLOT_SYMS.length)];r.textContent=sym;r.classList.remove('spinning');results.push(sym);if(results.length===3)evaluateSlots(results,bet);},delays[i]);});}
+function evaluateSlots(res,bet){const[a,b,c]=res;let mult=0,msg='';if(a===b&&b===c){if(a==='🍉'){mult=20;msg='🍉🍉🍉 JACKPOT!';}else if(a==='👑'){mult=15;msg='👑👑👑 ROYAL WIN!';}else if(a==='🌟'){mult=10;msg='🌟 STAR WIN!';}else if(a==='🍈'){mult=5;msg='🍈 MELON WIN!';}else if(a==='🌱'){mult=3;msg='🌱 SPROUT WIN!';}else{mult=2;msg='TRIPLE WIN!';}}else if(a===b||b===c||a===c){mult=1.5;msg='PAIR WIN!';}else msg='No match!';const won=mult>0?Math.round(bet*mult):0;if(mult>0){updateCrowns(won);showResult('slots-result',`${msg} ×${mult} — +${won} 👑`,'win');showToast(`${msg} +${won} 👑`,'win');}else{showResult('slots-result',`${msg} Lost ${bet} 👑`,'lose');showToast(`No match! -${bet} 👑`,'lose');}recordBet('slots',bet,won,mult>0);document.getElementById('slots-play').disabled=false;}
+
+/* ══ ROULETTE ══ */
+const ROULETTE_NUMS=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+let roulettePick=null;
+function drawRouletteWheel(angle=0){const canvas=document.getElementById('roulette-canvas');const ctx=canvas.getContext('2d');const cx=100,cy=100,r=96;ctx.clearRect(0,0,200,200);const seg=(Math.PI*2)/37;ROULETTE_NUMS.forEach((n,i)=>{const start=angle+i*seg-Math.PI/2;const color=n===0?'#2ecc52':i%2===0?'#c0392b':'#1a1a2e';ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,start,start+seg);ctx.fillStyle=color;ctx.fill();ctx.strokeStyle='rgba(0,0,0,0.3)';ctx.lineWidth=1;ctx.stroke();ctx.save();ctx.translate(cx,cy);ctx.rotate(start+seg/2);ctx.translate(r*0.72,0);ctx.rotate(Math.PI/2);ctx.fillStyle='#fff';ctx.font='bold 8px Nunito';ctx.textAlign='center';ctx.fillText(n,0,3);ctx.restore();});ctx.beginPath();ctx.arc(cx,cy,12,0,Math.PI*2);ctx.fillStyle='#0d1a0f';ctx.fill();ctx.strokeStyle='rgba(77,219,106,0.5)';ctx.lineWidth=2;ctx.stroke();ctx.beginPath();ctx.moveTo(cx,cy-r+4);ctx.lineTo(cx-5,cy-r+16);ctx.lineTo(cx+5,cy-r+16);ctx.fillStyle='#ffd44d';ctx.fill();}
+drawRouletteWheel();
+function selectRBet(type,btn){document.querySelectorAll('.rb-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');roulettePick=type;const labels={red:'🍉 Red ×2',green:'🌿 Green ×3',black:'🌑 Black ×2',even:'EVEN ×2',odd:'ODD ×2',low:'LOW 1–18 ×2'};document.getElementById('roulette-selected').textContent='Bet: '+labels[type];}
+function spinRoulette(){if(!roulettePick)return showToast('Pick a bet first!','push');const bet=getBet('roulette-bet');if(bet>crowns)return showToast('Not enough crowns!','lose');updateCrowns(-bet);document.getElementById('roulette-play').disabled=true;document.getElementById('roulette-result').className='result-flash';const ti=Math.floor(Math.random()*37);const tn=ROULETTE_NUMS[ti];const tc=ti===0?'green':ti%2===0?'red':'black';const seg=(Math.PI*2)/37;const stopAngle=-(ti*seg)+Math.PI*2*(6+Math.random()*4);const duration=3000,start=performance.now();function animate(now){const t=Math.min((now-start)/duration,1);const ease=1-Math.pow(1-t,3);drawRouletteWheel(ease*stopAngle);if(t<1)requestAnimationFrame(animate);else evaluateRoulette(tn,tc,bet);}requestAnimationFrame(animate);}
+function evaluateRoulette(num,color,bet){const pick=roulettePick;let win=false,mult=0;if(pick==='red'&&color==='red'){win=true;mult=2;}else if(pick==='green'&&color==='green'){win=true;mult=3;}else if(pick==='black'&&color==='black'){win=true;mult=2;}else if(pick==='even'&&num!==0&&num%2===0){win=true;mult=2;}else if(pick==='odd'&&num%2!==0){win=true;mult=2;}else if(pick==='low'&&num>=1&&num<=18){win=true;mult=2;}const won=win?bet*mult:0;if(win){updateCrowns(won);showResult('roulette-result',`🎡 ${num} ${color.toUpperCase()}! Won ${won} 👑`,'win');showToast(`${num} — WIN! +${won} 👑`,'win');}else{showResult('roulette-result',`🎡 ${num} ${color.toUpperCase()} — Lost ${bet} 👑`,'lose');showToast(`${num} ${color} — -${bet} 👑`,'lose');}recordBet('roulette',bet,won,win);document.getElementById('roulette-play').disabled=false;}
+
+/* ══ COIN FLIP ══ */
+let flipPick=null;
+function pickSide(side){flipPick=side;document.getElementById('pick-heads').className='pick-btn'+(side==='heads'?' selected-heads':'');document.getElementById('pick-tails').className='pick-btn'+(side==='tails'?' selected-tails':'');document.getElementById('flip-pick-label').textContent=side==='heads'?'👑 Rind selected':'🍉 Flesh selected';}
+function doFlip(){if(!flipPick)return showToast('Pick Rind or Flesh first!','push');const bet=getBet('flip-bet');if(bet>crowns)return showToast('Not enough crowns!','lose');updateCrowns(-bet);document.getElementById('flip-play').disabled=true;document.getElementById('flip-result').className='result-flash';const coin=document.getElementById('coin-el');coin.classList.remove('flipping');void coin.offsetWidth;coin.classList.add('flipping');setTimeout(()=>{const result=Math.random()<0.5?'heads':'tails';coin.className='coin '+result;coin.textContent=result==='heads'?'👑':'🍉';coin.classList.remove('flipping');const won=result===flipPick?bet*2:0;const isWin=result===flipPick;if(isWin){updateCrowns(won);showResult('flip-result',`${result==='heads'?'👑 Rind':'🍉 Flesh'}! Win ${won} 👑`,'win');showToast(`Correct! +${bet} 👑`,'win');}else{showResult('flip-result',`${result==='heads'?'👑 Rind':'🍉 Flesh'}! Lost ${bet} 👑`,'lose');showToast(`Wrong side! -${bet} 👑`,'lose');}recordBet('coinflip',bet,won,isWin);document.getElementById('flip-play').disabled=false;},850);}
+
+/* ══ HI-LO ══ */
+let hiloCard=null,hiloStreak=0,hiloBet=0,hiloMult=1.0,hiloActive=false;
+const HL_VALS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+const HL_SUITS=['♠','♣','♥','♦'];
+function hlNumVal(v){if(v==='A')return 1;if(v==='J')return 11;if(v==='Q')return 12;if(v==='K')return 13;return parseInt(v);}
+function hlRandCard(){return{v:HL_VALS[Math.floor(Math.random()*13)],s:HL_SUITS[Math.floor(Math.random()*4)]};}
+function hlRenderCard(card){const isRed=card.s==='♥'||card.s==='♦';const el=document.getElementById('hilo-card-el');el.className='hilo-big-card '+(isRed?'red':'black');el.innerHTML=`<div class="hb-val">${card.v}</div><div class="hb-suit">${card.s}</div>`;}
+function hiloStart(){hiloBet=getBet('hilo-bet');if(hiloBet>crowns)return showToast('Not enough crowns!','lose');updateCrowns(-hiloBet);hiloStreak=0;hiloMult=1.0;hiloActive=true;hiloCard=hlRandCard();hlRenderCard(hiloCard);document.getElementById('hilo-streak').textContent='Streak: 0 | ×1.00';document.getElementById('hilo-mult-info').textContent='Cash out: '+hiloBet+' 👑';document.getElementById('hilo-result').className='result-flash';['hilo-higher','hilo-lower','hilo-cashout'].forEach(id=>document.getElementById(id).disabled=false);document.getElementById('hilo-start-btn').disabled=true;}
+function hiloGuess(dir){if(!hiloActive)return;const nextCard=hlRandCard();const cv=hlNumVal(hiloCard.v),nv=hlNumVal(nextCard.v);let correct=dir==='higher'?nv>cv:nv<cv;if(nv===cv)correct=Math.random()<0.5;hiloCard=nextCard;hlRenderCard(hiloCard);if(correct){hiloStreak++;hiloMult=parseFloat((hiloMult*(1.3+hiloStreak*0.05)).toFixed(2));document.getElementById('hilo-streak').textContent=`Streak: ${hiloStreak} 🔥 | ×${hiloMult}`;document.getElementById('hilo-mult-info').textContent='Cash out: '+Math.round(hiloBet*hiloMult)+' 👑';showToast(`Correct! ×${hiloMult}`,'win');}else{hiloActive=false;['hilo-higher','hilo-lower','hilo-cashout'].forEach(id=>document.getElementById(id).disabled=true);document.getElementById('hilo-start-btn').disabled=false;recordBet('hilo',hiloBet,0,false);showResult('hilo-result',`Wrong! Lost ${hiloBet} 👑`,'lose');showToast(`Wrong! -${hiloBet} 👑`,'lose');}}
+function hiloCashout(){if(!hiloActive||hiloStreak===0)return showToast('Make at least one correct guess!','push');const won=Math.round(hiloBet*hiloMult);updateCrowns(won);hiloActive=false;['hilo-higher','hilo-lower','hilo-cashout'].forEach(id=>document.getElementById(id).disabled=true);document.getElementById('hilo-start-btn').disabled=false;recordBet('hilo',hiloBet,won,true);showResult('hilo-result',`Cashed out ×${hiloMult} — Won ${won} 👑`,'win');showToast(`Cashed out! +${won-hiloBet} 👑`,'win');}
+
+/* ══ DICE ══ */
+const DICE_FACES=['⚀','⚁','⚂','⚃','⚄','⚅'];
+let diceType='over';
+function setDiceType(type,btn){diceType=type;document.querySelectorAll('.dice-type-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updateDiceTarget();}
+function updateDiceTarget(){const target=parseInt(document.getElementById('dice-slider').value);document.getElementById('dice-target-val').textContent=target;document.getElementById('dice-target-label').innerHTML=`Target: ${diceType} <span id="dice-target-val">${target}</span>`;let wins=0;for(let d1=1;d1<=6;d1++)for(let d2=1;d2<=6;d2++){const s=d1+d2;if(diceType==='over'&&s>target)wins++;else if(diceType==='under'&&s<target)wins++;}const chance=Math.round(wins/36*100);const payout=wins>0?parseFloat((36/wins*0.97).toFixed(2)):0;document.getElementById('dice-win-chance').textContent=`Win chance: ${chance}%`;document.getElementById('dice-payout-mult').textContent=`Payout: ×${payout}`;}
+updateDiceTarget();
+function rollDice(){const bet=getBet('dice-bet');if(bet>crowns)return showToast('Not enough crowns!','lose');updateCrowns(-bet);document.getElementById('dice-play').disabled=true;document.getElementById('dice-result').className='result-flash';const target=parseInt(document.getElementById('dice-slider').value);const d0=document.getElementById('die-0'),d1=document.getElementById('die-1');d0.classList.add('rolling');d1.classList.add('rolling');const iv=setInterval(()=>{d0.textContent=DICE_FACES[Math.floor(Math.random()*6)];d1.textContent=DICE_FACES[Math.floor(Math.random()*6)];},80);setTimeout(()=>{clearInterval(iv);d0.classList.remove('rolling');d1.classList.remove('rolling');const r0=Math.floor(Math.random()*6)+1,r1=Math.floor(Math.random()*6)+1;const sum=r0+r1;d0.textContent=DICE_FACES[r0-1];d1.textContent=DICE_FACES[r1-1];let wins=0;for(let a=1;a<=6;a++)for(let b2=1;b2<=6;b2++){const s=a+b2;if((diceType==='over'&&s>target)||(diceType==='under'&&s<target))wins++;}const payout=wins>0?parseFloat((36/wins*0.97).toFixed(2)):0;const hit=(diceType==='over'&&sum>target)||(diceType==='under'&&sum<target);const won=hit?Math.round(bet*payout):0;if(hit){updateCrowns(won);showResult('dice-result',`Rolled ${sum}! Win ×${payout} = ${won} 👑`,'win');showToast(`${sum} — WIN! +${won-bet} 👑`,'win');}else{showResult('dice-result',`Rolled ${sum}. Lost ${bet} 👑`,'lose');showToast(`${sum} — Lost ${bet} 👑`,'lose');}recordBet('dice',bet,won,hit);document.getElementById('dice-play').disabled=false;},900);}
+
+/* ══ CRASH ══ */
+let crashActive=false,crashMultiplier=1.0,crashTarget=1.0,crashBetAmt=0,crashCashedOut=false,crashRaf=null,crashStartTime=null,crashPoints=[];
+const crashHistoryArr=[];
+function genCrashTarget(){const r=Math.random();if(r<0.05)return 1.0;return parseFloat((Math.random()*9+1).toFixed(2));}
+function doCrashStart(){if(crashActive)return;const bet=getBet('crash-bet');if(bet>crowns)return showToast('Not enough crowns!','lose');crashBetAmt=bet;updateCrowns(-bet);crashTarget=genCrashTarget();crashMultiplier=1.0;crashActive=true;crashCashedOut=false;crashPoints=[[0,0]];document.getElementById('crash-go-btn').style.display='none';document.getElementById('crash-cashout-btn').style.display='block';document.getElementById('crash-result').className='result-flash';const multEl=document.getElementById('crash-mult');multEl.className='crash-mult-display';multEl.textContent='1.00×';crashStartTime=performance.now();function frame(now){if(!crashActive)return;const elapsed=(now-crashStartTime)/1000;crashMultiplier=parseFloat(Math.pow(1.08,elapsed*10).toFixed(2));const me=document.getElementById('crash-mult');if(crashMultiplier>3)me.className='crash-mult-display danger';me.textContent=crashMultiplier.toFixed(2)+'×';const canvas=document.getElementById('crash-canvas');const ctx=canvas.getContext('2d');ctx.clearRect(0,0,500,190);const maxT=Math.max(elapsed+1,5),maxM=Math.max(crashMultiplier+0.5,3);crashPoints.push([elapsed,crashMultiplier]);ctx.beginPath();ctx.strokeStyle='#4ddb6a';ctx.lineWidth=3;ctx.shadowBlur=8;ctx.shadowColor='#4ddb6a';crashPoints.forEach(([t,m],i)=>{const x=t/maxT*480+10,y=180-m/maxM*160;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();ctx.shadowBlur=0;if(crashPoints.length>0){const[lt,lm]=crashPoints[crashPoints.length-1];ctx.beginPath();ctx.arc(lt/maxT*480+10,180-lm/maxM*160,6,0,Math.PI*2);ctx.fillStyle='#4ddb6a';ctx.shadowBlur=12;ctx.shadowColor='#4ddb6a';ctx.fill();ctx.shadowBlur=0;}if(crashMultiplier>=crashTarget){crashActive=false;const me2=document.getElementById('crash-mult');me2.className='crash-mult-display crashed';me2.textContent='CRASH! '+crashMultiplier.toFixed(2)+'×';document.getElementById('crash-go-btn').style.display='block';document.getElementById('crash-cashout-btn').style.display='none';addCrashHistory(crashMultiplier);if(!crashCashedOut){recordBet('crash',crashBetAmt,0,false);showResult('crash-result',`Crashed at ×${crashMultiplier.toFixed(2)}! Lost ${crashBetAmt} 👑`,'lose');showToast(`CRASH ×${crashMultiplier.toFixed(2)}! -${crashBetAmt} 👑`,'lose');}}else{crashRaf=requestAnimationFrame(frame);}}crashRaf=requestAnimationFrame(frame);}
+function crashCashout(){if(!crashActive||crashCashedOut)return;crashCashedOut=true;crashActive=false;cancelAnimationFrame(crashRaf);const won=Math.round(crashBetAmt*crashMultiplier);updateCrowns(won);document.getElementById('crash-go-btn').style.display='block';document.getElementById('crash-cashout-btn').style.display='none';document.getElementById('crash-mult').className='crash-mult-display';recordBet('crash',crashBetAmt,won,true);showResult('crash-result',`Cashed out ×${crashMultiplier.toFixed(2)} — +${won-crashBetAmt} 👑`,'win');showToast(`×${crashMultiplier.toFixed(2)} cashed! +${won-crashBetAmt} 👑`,'win');addCrashHistory(crashMultiplier);}
+document.getElementById('crash-go-btn').addEventListener('click',doCrashStart);
+function addCrashHistory(mult){crashHistoryArr.unshift(mult);if(crashHistoryArr.length>10)crashHistoryArr.pop();const el=document.getElementById('crash-history');el.innerHTML='';crashHistoryArr.forEach(m=>{const p=document.createElement('div');p.className='crash-pill '+(m<1.5?'low':m<3?'mid':'high');p.textContent=m.toFixed(2)+'×';el.appendChild(p);});}
+
+/* ══ MINES ══ */
+let minesActive=false,minesBet=0,minesBoard=[],minesMineCount=3,minesRevealed=0,minesMult=1.0;
+function minesMultiplier(revealed,mines){const safe=25-mines;let mult=1.0;for(let i=0;i<revealed;i++)mult*=(safe-i)/(25-i);return parseFloat((1/mult*0.97).toFixed(2));}
+function updateMinesInfo(){const mines=parseInt(document.getElementById('mines-count').value);const m=minesMultiplier(1,mines);document.getElementById('mines-mult-info').textContent=minesActive?'×'+minesMult:'Next gem: ×'+m;}
+updateMinesInfo();
+function minesStart(){minesBet=getBet('mines-bet');if(minesBet>crowns)return showToast('Not enough crowns!','lose');updateCrowns(-minesBet);minesMineCount=parseInt(document.getElementById('mines-count').value);minesActive=true;minesRevealed=0;minesMult=1.0;document.getElementById('mines-start-btn').disabled=true;document.getElementById('mines-count').disabled=true;document.getElementById('mines-cashout-btn').disabled=true;document.getElementById('mines-result').className='result-flash';minesBoard=Array(25).fill('gem');let placed=0;while(placed<minesMineCount){const idx=Math.floor(Math.random()*25);if(minesBoard[idx]==='gem'){minesBoard[idx]='mine';placed++;}}renderMinesGrid();}
+function renderMinesGrid(){const grid=document.getElementById('mines-grid');grid.innerHTML='';for(let i=0;i<25;i++){const cell=document.createElement('div');cell.className='mine-cell'+(minesActive?'':' disabled');cell.onclick=()=>minesClick(i);grid.appendChild(cell);}updateMinesCashout();}
+function minesClick(idx){if(!minesActive)return;const grid=document.getElementById('mines-grid');const cell=grid.children[idx];if(cell.classList.contains('revealed-gem')||cell.classList.contains('revealed-mine'))return;if(minesBoard[idx]==='mine'){cell.classList.add('revealed-mine');cell.textContent='💣';minesActive=false;for(let i=0;i<25;i++){if(minesBoard[i]==='mine'&&i!==idx){grid.children[i].classList.add('show-all-mine');grid.children[i].textContent='💣';}}document.getElementById('mines-start-btn').disabled=false;document.getElementById('mines-count').disabled=false;document.getElementById('mines-cashout-btn').disabled=true;recordBet('mines',minesBet,0,false);showResult('mines-result',`💣 BOOM! Lost ${minesBet} 👑`,'lose');showToast(`💣 BOOM! -${minesBet} 👑`,'lose');}else{cell.classList.add('revealed-gem');cell.textContent='💎';minesRevealed++;minesMult=minesMultiplier(minesRevealed,minesMineCount);updateMinesCashout();showToast(`💎 Safe! ×${minesMult}`,'win');const totalGems=25-minesMineCount;if(minesRevealed>=totalGems)minesCashout();}}
+function updateMinesCashout(){const potential=Math.round(minesBet*minesMult);document.getElementById('mines-cashout-val').textContent=potential;updateMinesInfo();document.getElementById('mines-cashout-btn').disabled=!minesActive||minesRevealed===0;}
+function minesCashout(){if(!minesActive||minesRevealed===0)return;const won=Math.round(minesBet*minesMult);minesActive=false;updateCrowns(won);document.getElementById('mines-start-btn').disabled=false;document.getElementById('mines-count').disabled=false;document.getElementById('mines-cashout-btn').disabled=true;const grid=document.getElementById('mines-grid');for(let i=0;i<25;i++){if(minesBoard[i]==='mine'){grid.children[i].classList.add('show-all-mine');grid.children[i].textContent='💣';}}recordBet('mines',minesBet,won,true);showResult('mines-result',`💰 Cashed out ×${minesMult} — Won ${won} 👑`,'win');showToast(`Cashed out! +${won-minesBet} 👑`,'win');}
+function minesReset(){minesActive=false;document.getElementById('mines-start-btn').disabled=false;document.getElementById('mines-count').disabled=false;document.getElementById('mines-cashout-btn').disabled=true;const grid=document.getElementById('mines-grid');grid.innerHTML='';for(let i=0;i<25;i++){const c=document.createElement('div');c.className='mine-cell disabled';grid.appendChild(c);}updateMinesInfo();}
+minesReset();
+
+/* ══ LEADERBOARD ══ */
+// window.storage is available when rendered as a Claude artifact.
+// Falls back gracefully when opened as a plain HTML file.
+const LB_KEY = 'melon-casino-leaderboard-v1';
+let lbPlayerName = localStorage.getItem('melon_lb_name') || '';
+
+function lbSetName() {
+  const input = document.getElementById('lb-name-input');
+  const name = input.value.trim().slice(0, 18);
+  if (!name) return showToast('Enter a name first!', 'push');
+  lbPlayerName = name;
+  localStorage.setItem('melon_lb_name', name);
+  showToast('Name saved: ' + name, 'win');
+  lbRenderList();
+}
+
+async function lbSubmitScore() {
+  if (!lbPlayerName) return;
+  const net = save.stats.totalWon - save.stats.totalBet;
+  if (net <= 0) return; // only submit positive profits
+  if (!window.storage) return; // not in artifact mode
+
+  try {
+    const existing = await window.storage.get(LB_KEY, true).catch(() => null);
+    let entries = [];
+    if (existing) {
+      try { entries = JSON.parse(existing.value); } catch(e) {}
+    }
+    // Remove old entry for this name
+    entries = entries.filter(e => e.name !== lbPlayerName);
+    entries.push({ name: lbPlayerName, net, bets: save.stats.bets, wins: save.stats.wins, ts: Date.now() });
+    // Keep top 50 by net profit
+    entries.sort((a, b) => b.net - a.net);
+    entries = entries.slice(0, 50);
+    await window.storage.set(LB_KEY, JSON.stringify(entries), true);
+  } catch(e) { console.log('LB write error:', e); }
+}
+
+async function openLB() {
+  document.getElementById('lb-name-input').value = lbPlayerName;
+  document.getElementById('lb-modal').classList.add('show');
+  await lbRenderList();
+}
+function closeLB() { document.getElementById('lb-modal').classList.remove('show'); }
+
+async function lbRenderList() {
+  const el = document.getElementById('lb-list');
+  el.innerHTML = '<div style="color:var(--muted2);font-size:12px;padding:10px 0;">Loading…</div>';
+
+  let entries = [];
+  if (window.storage) {
+    try {
+      const raw = await window.storage.get(LB_KEY, true).catch(() => null);
+      if (raw) entries = JSON.parse(raw.value);
+    } catch(e) {}
+  }
+
+  // Always include local player if they have a score
+  const localNet = save.stats.totalWon - save.stats.totalBet;
+  if (lbPlayerName && localNet > 0) {
+    const exists = entries.find(e => e.name === lbPlayerName);
+    if (!exists) entries.push({ name: lbPlayerName, net: localNet, bets: save.stats.bets, wins: save.stats.wins, ts: Date.now() });
+    else if (localNet > exists.net) { exists.net = localNet; exists.bets = save.stats.bets; exists.wins = save.stats.wins; }
+  }
+
+  entries.sort((a, b) => b.net - a.net);
+
+  if (!entries.length) {
+    el.innerHTML = '<div style="color:var(--muted2);font-size:13px;padding:16px 0;text-align:center;">No scores yet — be the first! 🍉</div>';
+    return;
+  }
+
+  const medals = ['🥇','🥈','🥉'];
+  el.innerHTML = '';
+  entries.slice(0, 20).forEach((e, i) => {
+    const isMe = e.name === lbPlayerName;
+    const wr = e.bets > 0 ? Math.round(e.wins / e.bets * 100) : 0;
+    const row = document.createElement('div');
+    row.style.cssText = `display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:10px;margin-bottom:5px;background:${isMe ? 'rgba(255,212,77,0.08)' : 'var(--surface2)'};border:1.5px solid ${isMe ? 'rgba(255,212,77,0.4)' : 'var(--border)'};`;
+    row.innerHTML = `
+      <div style="font-family:'Fredoka One',cursive;font-size:16px;min-width:26px;text-align:center;">${medals[i] || '#'+(i+1)}</div>
+      <div style="flex:1;">
+        <div style="font-family:'Fredoka One',cursive;font-size:14px;color:${isMe ? 'var(--gold)' : 'var(--white)'};">${e.name}${isMe ? ' (you)' : ''}</div>
+        <div style="font-size:10px;color:var(--muted2);font-weight:700;">${e.bets} bets · ${wr}% win rate</div>
+      </div>
+      <div style="font-family:'Fredoka One',cursive;font-size:16px;color:var(--green);">+${e.net} 👑</div>`;
+    el.appendChild(row);
+  });
+
+  if (!window.storage) {
+    const note = document.createElement('div');
+    note.style.cssText = 'font-size:10px;color:var(--muted2);margin-top:10px;text-align:center;';
+    note.textContent = '⚠ Shared leaderboard only works inside the Claude artifact viewer.';
+    el.appendChild(note);
+  }
+}
+
+// Submit score whenever a bet is recorded
+const _origRecordBet = recordBet;
+// Wrap persist to auto-submit after score changes
+const _origPersist = persist;
+function persist() {
+  _origPersist();
+  // Debounced leaderboard submit
+  clearTimeout(persist._lbTimer);
+  persist._lbTimer = setTimeout(lbSubmitScore, 2000);
+}
+
+/* ══ INIT ══ */
+document.getElementById('crown-display').textContent=crowns;
+</script>
+</body>
+</html>
